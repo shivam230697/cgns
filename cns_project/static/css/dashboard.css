@@ -1,0 +1,11 @@
+#d1 div {
+    //background-color: green;
+    padding: 9px;
+    margin: 4px;
+}
+#card {
+    color: green;
+}
+table{
+    overflow-y: scroll;
+}

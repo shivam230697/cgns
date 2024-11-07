@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Payments Details {% endblock %}
+{% block content %}
+
+    <div class="container">
+        {% include 'message.html'%}
+        <div class="table-responsive text-center">
+            <input   class="search_input mt-5" style="float:left;" type="text" id="searchInput" placeholder="Search by payment id...">
+            <table class="table" id="pay_table" style="overflow:scroll;">
+                <thead>
+                    <tr>
+                        <th scope="col">Sr No.</th>
+                        <th scope="col">Payment Id</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Payment Method</th>
+<!--                        <th scope="col">payment_status</th>-->
+                        <th scope="col">Payment Amount</th>
+                        <th scope="col">Date of payment </th>
+                        <!--<th scope="col">Updated at </th>-->
+<!--                        <th scope="col">payment_dues</th>-->
+
+
+
+
+                    </tr>
+                </thead>
+
+            {% for data in payments %}
+                <tbody>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }} </th>
+                        <td id="pay_id">{{data.payment_id}}</td>
+                        <td>{{data.customer}}</td>
+                        <td>{{data.payment_method}}</td>
+                        <td>{{data.payment_amount}}</td>
+                        <td>{{data.created_at |date:"d-m-y H:i:s A"}}</td>
+                       <!-- <td>{{data.updated_at |date:"d-m-y H:i:s A"}}</td>-->
+
+                    </tr>
+
+                  </tbody>
+                {% endfor %}
+            </table>
+
+            <!--<button id="btn" >Total net weight</button>-->
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#pay_table tbody tr").filter(function() {
+                $(this).toggle($(this).find("#pay_id").text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

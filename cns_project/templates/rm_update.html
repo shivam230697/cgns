@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Update Raw Material{% endblock %}
+{%load bootstrap5 %}
+
+{% block content %}
+    <div class="container">
+        <div class="jumbotron text-center">
+            {% include 'message.html'%}
+
+            <form action="" method = "post" class="post-form">
+                {% csrf_token %}
+                <label for="raw_rst">RST NUMBER:</label><br>
+                <input id="raw_rst" name="rst" type="text"  value="{{data.rst_no}}"><br><br>
+                <label for="id_kanta_rate">Kanta Rate:</label><br>
+                <input id="id_kanta_rate" name="kanta_rate" type="text" value="{{data.kanta_rate}}"><br><br>
+                <label for="id_paid_amount">Paid Amount:</label><br>
+                <input id="id_paid_amount" name="paid_amount" type="text" value="{{data.paid_amount}}"><br><br>
+
+                <label for="id_created_at">Creation Date:</label><br>
+                <input id="id_created_at" name="created_at" type="datetime-local" value="{{data.created_at|date:'Y-m-d\TH:i' }}"><br><br>
+
+                <label for="raw-net_weight">NET WEIGHT:</label><br>
+                <input id="raw-net_weight" name="net_wt" type="text"  value="{{data.net_wt}}"><br><br>
+                <label for="raw_rate">RATE:</label><br>
+                <input id="raw_rate" name="rate" type="text" value="{{data.rate}}"><br><br>
+                <label for="raw_total">TOTAL:</label>
+                <br> <input id="raw_total" name="total" type="text"  value="{{data.total}}" readonly><br><br>
+                <input formaction="{% url 'confirm' data.pk %}" type="submit" value="Confirm">
+                <input formaction="{% url 'raw_material_view' %}" type="submit" value="Cancel">
+            </form>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+                $("#raw-net_weight, #raw_rate, #id_kanta_rate").on("input", function () {
+                var raw_weight = parseFloat($("#raw-net_weight").val()) || 0;
+                var raw_price = parseFloat($("#raw_rate").val()) || 0;
+                var kanta_rate = parseFloat($("#id_kanta_rate").val()) || 100;
+                var raw_total = (raw_weight * raw_price);
+                $('#raw_total').val(raw_total.toFixed(2));
+            });
+        });
+    </script>
+{% endblock %}

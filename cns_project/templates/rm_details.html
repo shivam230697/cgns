@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Detail Raw Material{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4" >
+    {% include 'message.html'%}
+    <h1 class="text-center">Raw Materials</h1>
+    <div class="container row w-25">
+        <input class="search_input mt-5 mb-2" style="float:left;" type="text" id="searchInput" placeholder="Search by RST...">
+    </div>
+    <div class="table-responsive text-nowrap my-2" style="height:500px;">
+<!--        <input class="search_input mt-5" style="float:left;" type="text" id="searchInput" placeholder="Search by RST...">
+-->
+
+        <table class="table table-hover" id="raw_table" style=" overflow:scroll;">
+            <thead class="bg-dark text-muted sticky-top">
+                <tr>
+                    <th>Sr no.</th>
+                    <th>RST</th>
+                    <th>Net Weight</th>
+                    <th>Kanta Rate</th>
+                    <th>Rate</th>
+                    <th>Total</th>
+                    <th>Paid Amount</th>
+                    <th scope="col">Created at </th>
+                    <th scope="col">Updated at </th>
+                    {% if user.is_superuser %}
+                    <th>Action</th>
+                    {% endif %}
+                    <!-- Add more table headers based on your model fields -->
+                </tr>
+            </thead>
+
+            <tbody >
+                {% for item in rm_data %}
+                    <tr style="">
+                        <td style="  ">{{ forloop.counter }}</td>
+                        <td id="raw_rst">{{ item.rst_no |safe }}</td>
+                        <td>{{ item.net_wt|safe}} q</td>
+                        <td>{{ item.kanta_rate }} Rs</td>
+                        <td>{{ item.rate }} Rs</td>
+                        <td>{{ item.total }} Rs</td>
+                        <td>{{ item.paid_amount }} Rs</td>
+                        <td>{{item.created_at |date:"d-m-y H:i:s A"}}</td>
+                        <td>{{item.updated_at |date:"d-m-y H:i:s A"}}</td>
+                        {% if user.is_superuser %}
+
+                        <td>
+                                <a href="{% url 'rm_update' item.id %}">
+                                    <button type="button">Update</button>
+                                </a>
+                                <a href="{% url 'delete_rm_entry' item.id %}">
+                                    <button type="button">Delete</button>
+                                </a>
+                        </td>
+                        {% endif %}
+                        <!-- Add more table data based on your model fields -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<script>
+    $(document).ready(function() {
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#raw_table tbody tr").filter(function() {
+                $(this).toggle($(this).find("#raw_rst").text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}

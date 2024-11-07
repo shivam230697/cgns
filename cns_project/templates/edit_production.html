@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{%load bootstrap5 %}
+{% block title %}Update Production{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="jumbotron text-center">
+            {% include 'message.html'%}
+            <form action="" method = "post" class="post-form">
+                {% csrf_token %}
+                <label for="PRODUCTION RST NUMBER">RST NUMBER:</label><br> <input name="product_rst" type="text"  value="{{data.product_rst}}"><br><br>
+                <label for="PRODUCTION NET WEIGHT">NET WEIGHT:</label><br> <input name="product_net_wt" type="text"  value="{{data.product_net_weight}}"><br><br>
+                <label for="VEHICLE NUMBER">RATE:</label><br> <input name="vehicle_num" type="text" value="{{data.vehicle_no}}"><br><br>
+                <input formaction="{% url 'update_production' data.pk %}" type="submit" value="Update">
+                <input formaction="{% url 'view_production' %}" type="submit" value="Cancel">
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

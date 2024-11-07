@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block title %} Add Invoice {% endblock %}
+{% block content %}
+
+
+    <div class="container form-group  mt-5" >
+        <div class="jumbotron  ">
+            {% include 'message.html'%}
+            <a  style="float:right;" href="{% url 'add_customer' %}" class="btn btn-primary ">add customer</a>
+
+            <h1>  Add Invoice </h1>
+            <form action = "" method = "POST" class="post-form">
+                {% csrf_token %}
+
+
+                <label for="id_customer">Customer:</label>
+
+                <select name="customer" id="id_customer"  class=" form-control form-select" required>
+                    {% for customer, label in invoice_form.customer.field.choices %}
+                        <option value="{{customer}}">{{label}}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="row item45mm mt-2">
+                    <div class="col-4 text-start">
+                        <label for="id_item1">Item 45mm:</label>
+                        <input  class="form-check-input" type="checkbox" id="id_item1" name="item45mm" value="1" ><br>
+                    </div>
+                    <div class="col-4 text-center">
+                        <label for="id_quantity_item1">quantity 45mm:</label>
+                        <input type="{{invoice_form.quantity_item1.input_type}}" class="" id="id_quantity_item1" name="quantity_item1" value="{{ form.quantity_item1.value|default_if_none:'' }}" >
+                    </div>
+                    <div class="col-4 text-end">
+                            Rate 45mm:
+                            <input type="{{invoice_form.price_item1.input_type}}" class="" id="id_price_item1" name="price_item1" value="{{ form.price_item1.value|default_if_none:'' }}" >
+                    </div>
+                </div>
+                <div class="row item90mm mt-2">
+                    <div class="col-4 text-start">
+                        <label for="id_item2">Item 90mm:</label>
+                        <input  class="form-check-input" type="checkbox" id="id_item2" name="item90mm" value="1"><br>
+                    </div>
+                    <div class="col-4 text-center">
+                        <label for="id_quantity_item2">quantity 90mm:</label>
+                        <input type="{{invoice_form.quantity_item2.input_type}}" class="" id="id_quantity_item2" name="quantity_item2" value="{{ form.quantity_item2.value|default_if_none:'' }}">
+                    </div>
+                    <div class="col-4 text-end">
+                        <label for="id_price_item2">Rate 90mm:</label>
+                        <input type="{{invoice_form.price_item2.input_type}}" class="" id="id_price_item2" name="price_item2" value="{{ form.price_item2.value|default_if_none:'' }}">
+                    </div>
+                </div>
+
+                <div class="row item_pencil mt-2">
+                    <div class="col-4 text-start">
+                        <label for="id_item3">Item pencil:</label>
+                        <input  class="form-check-input" type="checkbox" id="id_item3" name="item_pencil" value="1"><br>
+                    </div>
+                    <div class="col-4 text-center">
+                        <label for="id_quantity_item3">quantity pencil:</label>
+                        <input type="{{invoice_form.quantity_item3.input_type}}" class="" id="id_quantity_item3" name="quantity_item3" value="{{ form.quantity_item3.value|default_if_none:'' }}">
+                    </div>
+                    <div class="col-4 text-end">
+                        <label for="id_price_item3">Rate pencil:</label>
+                        <input type="{{invoice_form.price_item3.input_type}}" class="" id="id_price_item3" name="price_item3" value="{{ form.price_item3.value|default_if_none:'' }}">
+                    </div>
+                </div>
+                <label for="total_id">Total:</label>
+                <input type="{{invoice_form.total.input_type}}" class="form-control" id="total_id" name="total" value="{{ form.total.value|default_if_none:'' }}" readonly>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="id_gst">GST %:</label>
+                        <input type="{{invoice_form.gst.input_type}}" class="form-control" id="id_gst" name="gst" value="{{ form.gst.value|default_if_none:'' }}" required>
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_discount">Discount %:</label>
+                        <input type="{{invoice_form.discount.input_type}}" class="form-control" id="id_discount" name="discount" value="{{ form.discount.value|default_if_none:'' }}" >
+                    </div>
+                </div>
+
+
+
+                <label for="payment_id">Payment:</label>
+                <input type="{{invoice_form.payment.input_type}}" name="payment" id="payment_id" class="form-control" placeholder="amount to be paid" readonly>
+
+                <label for="id_shipping_address">Shipping Address:</label>
+                <input type="text" class="form-control" id="id_shipping_address" name="shipping_address" value="{{ form.shipping_address.value|default_if_none:'' }}" required>
+
+                <label for="id_customer">Shipping State:</label>
+
+                <select name="shipping_state" id="id_shipping_state"  class=" form-control form-select">
+                    {% for state_code, state_name in invoice_form.shipping_state.field.choices %}
+                        <option value="{{state_code}}">{{state_name}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="id_shipping_city">Shipping City:</label>
+                <input type="text" class="form-control" id="id_shipping_city" name="shipping_city" value="{{ form.shipping_city.value|default_if_none:'' }}" required>
+
+                <label for="id_shipping_zip_code">Shipping Zip Code:</label>
+                <input type="text" class="form-control" id="id_shipping_zip_code" name="shipping_zip_code" value="{{ form.shipping_zip_code.value|default_if_none:'' }}" required>
+
+                <label for="id_paid_amount">Paid Amount:</label>
+                <input type="{{invoice_form.paid_amount.input_type}}" class="form-control" id="id_paid_amount" name="paid_amount" value="{{ form.paid_amount.value|default_if_none:'' }}" >
+
+                <label for="id_driver_name">Driver Name:</label>
+                <input type="text" class="form-control" id="id_driver_name" name="driver_name" value="{{ form.driver_name.value|default_if_none:'' }}" required>
+
+                <label for="id_driver_number">Driver Number:</label>
+                <input type="tel" class="form-control" id="id_driver_number" name="driver_number" value="{{ form.driver_number.value|default_if_none:'' }}" required>
+
+                <label for="id_assigned_vehicle">Vehicle Number:</label>
+                <input type="text" class="form-control" id="id_assigned_vehicle" name="assigned_vehicle" value="{{ form.assigned_vehicle.value|default_if_none:'' }}" required>
+
+                <br><button type="submit" class="btn btn-primary mx-2 my-2">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+<script>
+$(document).ready(function () {
+    var total = 0;
+    var total1 = 0;
+    var total2 = 0;
+    var total3 = 0;
+    $("#id_quantity_item1, #id_price_item1, #id_quantity_item2, #id_price_item2, #id_quantity_item3, #id_price_item3").prop("readonly", true);
+
+    function updateTotal() {
+        total = total1 + total2 + total3;
+        $('#total_id').val(total.toFixed(2));
+    }
+
+    function updateTotal1() {
+        var quantity = parseFloat($("#id_quantity_item1").val()) || 0;
+        var price = parseFloat($("#id_price_item1").val()) || 0;
+        total1 = quantity/1000 * price;
+        updateTotal();
+    }
+
+    function updateTotal2() {
+        var quantity = parseFloat($("#id_quantity_item2").val()) || 0;
+        var price = parseFloat($("#id_price_item2").val()) || 0;
+        total2 = quantity/1000 * price;
+        updateTotal();
+    }
+
+    function updateTotal3() {
+        var quantity = parseFloat($("#id_quantity_item3").val()) || 0;
+        var price = parseFloat($("#id_price_item3").val()) || 0;
+        total3 = quantity/1000 * price;
+        updateTotal();
+    }
+
+    function updateFinalAmount() {
+        var gst = parseFloat($("#id_gst").val()) || 0;
+        var discount = parseFloat($("#id_discount").val()) || 0;
+
+        var finalAmount = total + (total * gst / 100) - (total * discount / 100);
+        $('#payment_id').val(finalAmount.toFixed(2));
+    }
+
+    $("#id_quantity_item1, #id_price_item1").on("input", function () {
+        updateTotal1();
+        updateFinalAmount();
+    });
+
+    $("#id_quantity_item2, #id_price_item2").on("input", function () {
+        updateTotal2();
+        updateFinalAmount();
+    });
+
+    $("#id_quantity_item3, #id_price_item3").on("input", function () {
+        updateTotal3();
+        updateFinalAmount();
+    });
+
+    $("#id_gst, #id_discount").on("input", function () {
+        updateFinalAmount();
+    });
+
+    $("input[type='checkbox']").click(function () {
+        var checkboxId = $(this).attr('id');
+        var quantityId = '#id_quantity_' + checkboxId.substring(3);
+        var priceId = '#id_price_' + checkboxId.substring(3);
+
+        if ($(this).is(":checked")) {
+            $(quantityId).prop("readonly", false);
+            $(priceId).prop("readonly", false);
+            updateTotal1();
+            updateTotal2();
+            updateTotal3();
+            updateFinalAmount();
+        } else {
+            $(quantityId).prop("readonly", true).val(0);
+            $(priceId).prop("readonly", true).val(0);
+            updateTotal1();
+            updateTotal2();
+            updateTotal3();
+            updateFinalAmount();
+        }
+    });
+});
+
+
+
+</script>
+{% endblock %}

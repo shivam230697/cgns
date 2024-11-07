@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Detail Production{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div class="jumbotron table-responsive text-center">
+            {% include 'message.html'%}
+            <input   class="search_input mt-5" style="float:left;" type="text" id="searchInput" placeholder="Search by RST...">
+            <table class="table" id="newt" >
+                <thead>
+                    <tr>
+                        <th scope="col">Sr No.</th>
+                        <th scope="col">Production RST</th>
+                        <th scope="col">Production Net Weight</th>
+                        <th scope="col">Vehicle Number</th>
+                        <th scope="col">Created at </th>
+                        <th scope="col">Updated at </th>
+                        <th scope="col">Action</th>
+
+
+
+
+                    </tr>
+                </thead>
+
+            {% for data in production_data %}
+                <tbody>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }} </th>
+                        <td id="prst">{{data.product_rst}}</td>
+                        <td>{{data.product_net_weight}}</td>
+                        <td>{{data.vehicle_no}}</td>
+                        <td>{{data.created_at |date:"d-m-y H:i:s A"}}</td>
+                        <td>{{data.updated_at |date:"d-m-y H:i:s A"}}</td>
+                        <td>
+                            <a href="{% url 'edit_production' data.id %}">
+                                <button type="button">Edit</button>
+                            </a>
+                            <a href="{% url 'delete_production' data.id %}">
+                                <button type="button">Delete</button>
+                            </a>
+                        </td>
+                    </tr>
+
+                  </tbody>
+                {% endfor %}
+            </table>
+
+            <!--<button id="btn" >Total net weight</button>-->
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#newt tbody tr").filter(function() {
+                $(this).toggle($(this).find("#prst").text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

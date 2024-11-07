@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{{ customer_form.media }}
+{% block title %} Customer {% endblock %}
+{% block content %}
+
+    <div class="container mt-5">
+        <div class="jumbotron">
+            {% include 'message.html'%}
+            <form class="form-group post-form" method="post" action="">
+                {% csrf_token %}
+                <label for="id_customer_name">Customer Name:*</label>
+                <input  class="form-control" type="text" id="id_customer_name" name="customer_name" value="{{ form.customer_name.value|default_if_none:'' }}" required>
+                <label for="id_customer_number">Customer Number:*</label>
+                <input type="number" class="form-control" id="id_customer_number" name="customer_number" value="{{ form.customer_number.value|default_if_none:'' }}" required>
+                <label for="id_customer_address">Customer Address:*</label>
+                <input type="text" class="form-control" id="id_customer_address" name="customer_address" value="{{ form.customer_address.value|default_if_none:'' }}" required>
+                <label for="id_customer_state">Customer state:*</label>
+                <select name="customer_state" id="id_customer_state"  class=" form-control form-select">
+                    {% for customer_state, label in customer_form.customer_state.field.choices %}
+                        <option value="{{customer_state}}">{{label}}</option>
+                    {% endfor %}
+                </select>
+                <label for="id_customer_city">Customer City:*</label>
+                <input type="text" class="form-control" id="id_customer_city" name="customer_city" value="{{ form.customer_city.value|default_if_none:'' }}" required>
+
+                <label for="id_zip_code">Zip Code:*</label>
+                <input type="number" class="form-control" id="id_zip_code" name="zip_code" value="{{ form.zip_code.value|default_if_none:'' }}" required>
+
+                <label for="id_customer_gstin">GSTIN:*</label>
+                <input type="text" class="form-control" id="id_customer_gstin" name="customer_gstin" value="{{ form.customer_gstin.value|default_if_none:'' }}" required>
+
+                <br><button  type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

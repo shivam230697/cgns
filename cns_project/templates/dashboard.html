@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% load custom_filters %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<div class="container-fluid">
+    <div class="d-flex">
+
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Dashboard</span>
+                </a>
+
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Reports</span></a>
+                    </li>
+
+
+
+
+
+
+                    <!-- <li>
+                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
+                            </li>
+                        </ul>
+                    </li> -->
+                </ul>
+                <hr>
+
+            </div>
+        </div>
+
+
+        <div class="col py-3 mx-2 my-2">
+            {% include 'message.html'%}
+            <div class="d-flex mx-2 my-2">
+                <input type="button" class="bg-success today-btn btn border my-1 mx-1" value="Today">
+                <input type="button" class="bg-success last-week-btn btn border my-1 mx-1" value="Last Week">
+                <input type="button" class="bg-success last-month-btn btn border my-1 mx-1" value="Last month">
+                <input type="button" class="bg-success last-year-btn btn border my-1 mx-1" value="Last Year">
+
+            </div>
+            <form method="post" class="post-form" action="{% url 'dashboard' %}">
+                {% csrf_token %}
+
+                <!-- Input with Icon 1 -->
+                <div class="mb-3 w-50">
+                    <div class="input-group">
+                        <span class="input-group-text" id="icon1">From</span>
+                        <input type="date" class=" from_date form-control" id="inputWithIcon1"
+                               onfocus="this.max=new Date().toISOString().split('T')[0]"
+                               placeholder="Username" name="from_date" aria-describedby="icon1" required>
+                    </div>
+                </div>
+
+                <!-- Input with Icon 2 -->
+                <div class="mb-3 w-50">
+                    <div class="input-group">
+                        <span class="input-group-text" id="icon2">To</span>
+                        <input type="date" class="to_date form-control" id="inputWithIcon2"
+                               onfocus="this.max=new Date().toISOString().split('T')[0]"
+                               placeholder="Password" name="to_date" aria-describedby="icon2" required>
+                    </div>
+                </div>
+
+                <div class="d-lg-flex flex-row">
+
+                    <div class="mb-3 px-2" >
+                        <input type="submit"
+                               style="background-color: #C5AA6A; border: 1px solid black; border-radius: 5px; "
+                               name="report_button" value="show production report">
+                    </div>
+
+                    <div class="mb-3 px-2">
+                        <input type="submit"
+                               style="background-color: #C5AA6A; border: 1px solid black; border-radius: 5px; "
+                               name="report_button" value="show raw material report">
+                    </div>
+                </div>
+            </form>
+                <br>
+
+            <div class="d-lg-flex flex-row " id="d1" >
+                <div class="table-responsive  " style="overflow:scroll; height:500px;">
+                {% if btn_name == 'show production report'%}
+                <table id="pt" class=" table   table-striped table-bordered mt-2  text-center align-middle"
+                       style="background-color: #4c3c3c; border: 2px solid black; border-radius: 10px;">
+                    <thead>
+                        <tr class="align-middle ">
+                            <th scope="col" >Serial Number </th>
+                            <th scope="col">Production RST</th>
+                            <th scope="col">Production Net Weight (q)</th>
+                            <th scope="col">Vehicle Number</th>
+                            <th scope="col">Created at </th>
+                            <th scope="col">Updated at </th>
+                        </tr>
+                    </thead>
+                    {% for obj in data %}
+                    <tbody >
+                        <tr>
+                            <th scope="row" class="text-light">{{forloop.counter}}</th>
+                            <td id="prst" class="text-light">{{obj.product_rst}}</td>
+                            <td id="pntwt" class="text-light">{{obj.product_net_weight|indian_currency_format}}</td>
+                            <td class="text-light">{{obj.vehicle_no}}</td>
+                            <td id="created" class="text-light">{{obj.created_at |date:"d-m-y H:i:s A"}}</td>
+                            <td class="text-light">{{obj.updated_at |date:"d-m-y H:i:s A"}}</td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% elif btn_name == 'show raw material report' %}
+                <table id="rmt" class=" table table-striped table-bordered text-center align-middle "
+                       style="background-color: #4c3c3c; border: 2px solid black; border-radius: 10px;overflow:scroll; height:500px;">
+                    <thead class="sticky-top bg-dark text-muted">
+                        <tr >
+                            <th scope="col">Serial Number</th>
+                            <th scope="col">Raw RST</th>
+                            <th scope="col">Kanta Rate</th>
+                            <th scope="col">Raw Weight (q)</th>
+                            <th scope="col">Raw Rate (Rs)</th>
+                            <th scope="col">Total  (Rs)</th>
+                            <th scope="col">Paid Amount</th>
+                            <th scope="col">Created at </th>
+                            <th scope="col">Updated at </th>
+                        </tr>
+                    </thead>
+                    {% for obj in data %}
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="text-light">{{forloop.counter}}</th>
+                            <td id="rmrst" class="text-light">{{obj.rst_no}}</td>
+                            <td id="kanta_rate" class="text-light">{{obj.kanta_rate|safe}}</td>
+                            <td id="rntwt" class="text-light">{{obj.net_wt|safe}}</td>
+                            <td id="raw_rate" class="text-light">{{obj.rate|safe}}</td>
+                            <td id="raw_total" class="text-light">{{obj.total|safe}}</td>
+                            <td id="paid_amount" class="text-light">{{obj.paid_amount|safe}}</td>
+                            <td id="raw_created" class="text-light">{{obj.created_at |date:"d-m-y H:i:s A"}}</td>
+                            <td class="text-light">{{obj.updated_at |date:"d-m-y H:i:s A"}}</td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {%  endif %}
+            </div>
+                <div class="sticky-top col-auto order-1">
+                    <div class="card mt-2 h-60" style="background-color: #4c3c3c; border: 2px solid black; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Date Range</h5> <hr>
+                            <p class="card-text text-light" id="date_range">Date range will be show here...</p>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2 h-60" style="background-color: #4c3c3c; border: 2px solid black; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 id="report_total" class="card-title">Report Total</h5> <hr>
+                            <p class="card-text text-light" id="pntwt_total">Total report will be shown here...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var btnName = "{{ btn_name }}";
+        var start_date = "{{ from_date }}";
+        var last_date = "{{ to_date }}";
+        if ( btnName == 'show production report'){
+            calculate_production_total();
+        }
+        else if (btnName == 'show raw material report') {
+            console.log("do somethig else");
+
+            calculate_raw_material();
+        }
+
+        function calculate_production_total() {
+            var btnName = "{{ btn_name }}";
+            console.log(btnName);
+            var totalColumn1 = 0;
+            var totalColumn2 = 0;
+            let values = [];
+
+            // Iterate through each row in the table
+            $('#pt tbody tr').each(function () {
+                // Get the value of the cells in the respective columns
+                var valueColumn1 = parseInt($(this).find('#pntwt').text(), 10) || 0;
+                values.push($(this).find('#created').text())
+                //var valueColumn2 = parseInt($(this).find('.column2').text(), 10) || 0;
+
+                // Accumulate the values
+                totalColumn1 += valueColumn1;
+                //totalColumn2 += valueColumn2;
+            });
+
+            // Display the total in the respective span elements
+            $('#pntwt_total').text('Total net weight: ' + totalColumn1);
+            let minDate =  values[0];
+            let maxDate = values[values.length - 1];
+
+            $('#date_range').text('From: ' + start_date );
+            $('#date_range').append('<br> To:         ' + last_date);
+
+
+            $('#report_total').text('Production Total');
+
+        }
+
+        function calculate_raw_material() {
+            var btnName = "{{ btn_name }}";
+            // console.log(btnName);
+            var total_weight = 0;
+            var total_rate = 0;
+            var total_price = 0;
+            var total_paid_amount = 0;
+            var total_kanta_rate = 0;
+
+            let values = [];
+
+            // Iterate through each row in the table
+            $('#rmt tbody tr').each(function () {
+                // Get the value of the cells in the respective columns
+                var weight_value = parseFloat($(this).find('#rntwt').text(), 10) || 0;
+                //var rate_value = parseFloat($(this).find('#raw_rate').text(), 10) || 0;
+                var price_value = parseFloat($(this).find('#raw_total').text(), 10) || 0;
+                var paid_amount_value = parseFloat($(this).find('#paid_amount').text(), 10) || 0;
+                var kanta_rate_value = parseFloat($(this).find('#kanta_rate').text(), 10) || 0;
+                //values.push($(this).find('#created').text())
+                //var valueColumn2 = parseInt($(this).find('.column2').text(), 10) || 0;
+
+                // Accumulate the values
+                total_weight += weight_value;
+                //total_rate += rate_value;
+
+                total_price += price_value;
+                total_kanta_rate += kanta_rate_value;
+                total_paid_amount += paid_amount_value;
+            });
+            var average_rate = (total_price/total_weight);
+
+            // Display the total in the respective span elements
+            $('#pntwt_total').text('Total net weight: ' + total_weight.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' q');
+            //$('#pntwt_total').append('<br>Total Rate: ' + total_rate.toFixed(2) + ' Rs');
+            $('#pntwt_total').append('<br>Average Rate: ' + average_rate.toLocaleString('en-IN',{ style: 'currency', currency: 'INR' }, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Rs');
+            $('#pntwt_total').append('<br>Total Payment: ' + total_price.toLocaleString('en-IN',{ style: 'currency', currency: 'INR' }, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+ ' Rs');
+            $('#pntwt_total').append('<br>Total Kanta Rate: ' + total_kanta_rate.toLocaleString('en-IN',{ style: 'currency', currency: 'INR' }, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+ ' Rs');
+            $('#pntwt_total').append('<br>Total Paid Amount: ' + total_paid_amount.toLocaleString('en-IN',{ style: 'currency', currency: 'INR' }, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+ ' Rs');
+            $('#date_range').text('From: ' + start_date );
+            $('#date_range').append('<br> To:         ' + last_date);
+
+
+            $('#report_total').text('Raw Material Total');
+
+
+        }
+
+
+        $(".today-btn").click(function() {
+                // Get the current date
+                const currentDate = new Date();
+                console.log(currentDate.getFullYear() + '/' + currentDate.getMonth() + 1 +'/'+currentDate.getDate());
+                console.log(currentDate.getMonth() + 1);
+                console.log(currentDate.getDate());
+
+                // Format the date as YYYY-MM-DD (required format for input type="date")
+                const formattedDate = currentDate.getFullYear() + '-' +
+                                      (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                      currentDate.getDate().toString().padStart(2, '0');
+                console.log(formattedDate);
+
+                // Set the formatted date as the value of the date field
+                $('.from_date').val(formattedDate);
+                $('.from_date').prop('min', formattedDate);
+                $('.to_date').val(formattedDate);
+                $('.to_date').prop('min', formattedDate);
+            });
+
+            $(".last-week-btn").click(function() {
+                 const currentDate = new Date();
+                 const formattedDate = currentDate.getFullYear() + '-' +
+                                      (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                      currentDate.getDate().toString().padStart(2, '0');
+                 const lastWeekStartDate = new Date(currentDate);
+                 lastWeekStartDate.setDate(currentDate.getDate() - 6); // Subtract 6 days for a week
+                 const formattedLastWeekStartDate = lastWeekStartDate.toISOString().split('T')[0];
+
+                // Set the formatted date as the value of the date field
+                $('.from_date').val(formattedLastWeekStartDate);
+                $('.to_date').val(formattedDate);  // Assuming the "to_date" field is for the end date
+
+            });
+
+            $(".last-month-btn").click(function() {
+                 const currentDate = new Date();
+                 const formattedDate = currentDate.getFullYear() + '-' +
+                                      (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                      currentDate.getDate().toString().padStart(2, '0');
+                 const lastMonthStartDate = new Date(currentDate);
+                 lastMonthStartDate.setMonth(currentDate.getMonth() - 1); // Subtract 1 month
+                 const formattedLastMonthStartDate = lastMonthStartDate.toISOString().split('T')[0];
+
+
+                // Set the formatted date as the value of the date field
+                $('.from_date').val(formattedLastMonthStartDate);
+                $('.to_date').val(formattedDate);  // Assuming the "to_date" field is for the end date
+
+            });
+
+            $(".last-year-btn").click(function() {
+                const currentDate = new Date();
+                const formattedDate = currentDate.getFullYear() + '-' +
+                                      (currentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                      currentDate.getDate().toString().padStart(2, '0');
+                const lastYearStartDate = new Date(currentDate);
+                lastYearStartDate.setFullYear(currentDate.getFullYear() - 1); // Subtract 1 year
+                const formattedLastYearStartDate = lastYearStartDate.toISOString().split('T')[0];
+
+                // Set the formatted date as the value of the date field
+                $('.from_date').val(formattedLastYearStartDate);
+                $('.to_date').val(formattedDate);  // Assuming the "to_date" field is for the end date
+            });
+
+
+    });
+</script>
+
+
+{% endblock %}

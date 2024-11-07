@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Customers {% endblock %}
+{% block content %}
+
+    <div class="container">
+        <h1 class="text-center">Customers</h1>
+        <div class="jumbotron table-responsive text-start">
+            {% include 'message.html'%}
+
+            <input   class="search_input  mt-5" style="float:left;" type="text" id="searchInput" placeholder="Search by Customer id...">
+            <table class="table text-nowrap" id="customer_list" >
+                <thead>
+                    <tr>
+                        <th scope="col">Sr No.</th>
+                        <th scope="col"> Name</th>
+                        <th scope="col"> Number</th>
+                        <th scope="col"> GSTIN</th>
+                        <th scope="col"> Address</th>
+                        <th scope="col"> State</th>
+                        <th scope="col"> City</th>
+                        <th scope="col">zip_code</th>
+                        <th scope="col">Dues</th>
+                        <th scope="col">Payment Status</th>
+                        <th scope="col">Created at </th>
+                        <th scope="col">Updated at </th>
+                        {% if user.is_authenticated %}
+                        <th scope="col">Action</th>
+                        {% endif %}
+
+                    </tr>
+                </thead>
+
+            {% for data in customer_list %}
+                <tbody>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }} </th>
+                        <td id="pay_id">{{data.customer_name |safe}}</td>
+                        <td>{{data.customer_number|safe}}</td>
+                        <td>{{data.customer_gstin|safe}}</td>
+                        <td>{{data.customer_address|safe}}</td>
+                        <td>{{data.customer_state|safe}}</td>
+                        <td>{{data.customer_city|safe}}</td>
+                        <td>{{data.zip_code|safe}}</td>
+                        <td>{{data.payment_dues|safe}} Rs</td>
+                        <td>{{data.payment_status|safe}}</td>
+                        <td>{{data.created_at |date:"d-m-y H:i:s A"|safe}}</td>
+                        <td>{{data.updated_at |date:"d-m-y H:i:s A"|safe}}</td>
+                        {% if user.is_authenticated %}
+                        <td><a href="{% url 'payment_history' data.pk %}" class="btn"><i class="bi bi-folder2-open" title="Preview {{data}}"></i></a></td>
+                        {% endif %}
+                        <!--<td>{{data.payment_status}}</td>-->
+
+<!--                        <td>{{data.payment_dues}}</td>-->
+                        <!--<td>
+                            <a href="{% url 'edit_production' data.id %}">
+                                <button type="button">Edit</button>
+                            </a>
+                            <a href="{% url 'delete_production' data.id %}">
+                                <button type="button">Delete</button>
+                            </a>
+                        </td>-->
+                    </tr>
+
+                  </tbody>
+                {% endfor %}
+            </table>
+
+            <!--<button id="btn" >Total net weight</button>-->
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function(){
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#customer_list tbody tr").filter(function() {
+                $(this).toggle($(this).find("#pay_id").text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block title %}Add Raw Material{% endblock %}
+
+{% block content %}
+
+    <div class="container form-group  mt-5" >
+        <div class="jumbotron">
+            {% include 'message.html' %}
+            <h1>  Raw Material </h1>
+            <form action = "" method = "post" class="post-form">
+                {% csrf_token %}
+                <label for="raw_material_rst"> RST:</label>
+                <input type="number" class="form-control" id="raw_material_rst" name="rst_no" value="{{ form.rst_no.value|default_if_none:'' }}" placeholder="required positive Integer only" inputmode="numeric" autofocus  required>
+
+                <label for="raw_material_rate">Rate(Rs):</label>
+                <input type="{{raw_material_form.rate.input_type}}" class="form-control" id="raw_material_rate" name="rate" value="{{ form.net_wt.value|default_if_none:'' }}" placeholder="required field " inputmode="decimal" required>
+
+                <label for="id_kanta_rate">Kanta Rate(Rs):</label>
+                <input type="{{raw_material_form.kanta_rate.input_type}}" class="form-control" id="id_kanta_rate" name="kanta_rate" value="{{ raw_material_form.kanta_rate.value|default_if_none:'' }}" placeholder="required field" inputmode="decimal" required>
+
+                <label for="raw_material_net_wt"> Net Weight:</label>
+                <input type="{{ raw_material_form.net_wt.widget.input_type }}" class="form-control" id="raw_material_net_wt" name="net_wt" value="{{ form.rate.value|default_if_none:'' }}" placeholder="required field / [weight in quintal only]" inputmode="decimal" required>
+
+                <label for="raw_material_total">Total Payment:</label>
+                <input type="number" class="form-control" id="raw_material_total" name="total" value="{{ form.total.value|default_if_none:'' }}" readonly>
+
+                <label for="id_paid_amount">Paid Amount:</label>
+                <input type="{{ raw_material_form.paid_amount.widget.input_type }}ber" class="form-control" id="id_paid_amount" name="paid_amount" value="{{ form.paid_amount.value|default_if_none:'' }}" placeholder="Required field" inputmode="numeric" required>
+
+
+                <br><button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#raw_material_net_wt, #raw_material_rate #id_kanta_rate").on("input", function () {
+        var raw_weight = parseFloat($("#raw_material_net_wt").val()) || 0;
+        var raw_price = parseFloat($("#raw_material_rate").val()) || 0;
+        var kanta_rate = parseFloat($("#id_kanta_rate").val()) || 100;
+
+        var raw_total = (raw_weight * raw_price);
+        $('#raw_material_total').val(raw_total.toFixed(2));
+    });
+    });
+</script>
+{% endblock %}

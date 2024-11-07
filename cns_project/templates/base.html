@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/html" data-bs-theme="dark">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="Leading manufacturer and supplier of high-quality biocoal briquettes. Provider of high-quality biocoal briquettes, reliable Turi buying and selling services, and accurate Dharma Kanta weighing solutions.">
+    <meta name="keywords" content="biocoal briquettes, biocoal briquettes Mamoni Baran Rajasthan, biocoal briquettes Factory, biocoal briquettes manufacturer,    eco-friendly fuel, Turi buying, Turi seller, Dharma Kanta, weighbridge services, material weighing, sustainable energy, biomass supplier, chaudharygirrajandsons, chaudhary girraj and sons">
+
+    <title>{% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/practice.css' %}">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script  id="data" type="text/javascript" src="{% static 'js/practice.js' %}"></script>
+
+
+</head>
+<body class="vh-100 base_body"
+      style="background-color:#B7AC44;"
+      data-bs-spy="scroll"
+      data-bs-target=".navbar"
+      data-bs-offset="50">
+
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg w-100 " style="background-color: #b28e31; border-radius: 1px;">
+        <div class="container-fluid">
+            <a class="navbar-brand circle  text-muted bg-dark" style="border-radius:10px; border:2px solid black; " href="#">  <b style="font-size:30px;">C&S</b> </a>
+
+            <!--toggle collapse element in small screen-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--collapse items-->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a id="home" class="nav-link active" aria-current="page" href="{% url 'base' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#product_scroll">Product details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#info_scroll">About us</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Raw Material
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'raw_material' %}">New entry</a></li>
+                            <li><a class="dropdown-item" href="{% url 'raw_material_view' %}">View entries </a></li>
+                            <li><a class="dropdown-item" href="{% url 'raw_expense' %}">Expenses </a></li>
+                            <!-- <li><a class="dropdown-item" href="#">Update entries </a></li>
+                            <li><a class="dropdown-item" href="#">Delete entries </a></li> -->
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Production
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'add_production' %}">Add Production</a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_production' %}">View Productions </a></li>
+                            <!-- <li><a class="dropdown-item" href="#">Update entries </a></li>
+                            <li><a class="dropdown-item" href="#">Delete entries </a></li> -->
+
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Invoice
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'add_invoice' %}">Add Invoice</a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_invoices' %}">View Invoices</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Payments
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{% url 'payment' %}">Add Payment</a></li>
+                                <li><a class="dropdown-item" href="{% url 'view_payments' %}"> Payment History</a></li>
+                            </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Customer
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{% url 'add_customer' %}">Add Customer</a></li>
+                                <li><a class="dropdown-item" href="{% url 'check_customer' %}"> Customer Detail</a></li>
+                            </ul>
+                    </li>
+                    {% endif %}
+
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">Index</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_page' %}">My Page</a>
+                        </li>-->
+
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {%if user.is_authenticated %}
+
+                    <li class="nav-item">
+
+                        <a  class="nav-link active" aria-current="page" href="{% url 'logout' %}">logout</a>
+
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a  class="nav-link active" aria-current="page" href="{% url 'signup' %}">signup</a>
+                    </li>
+                    {% endif %}
+                     <li class="nav-item">
+                         <a class="nav-link active btn btn-primary" href="#" aria-current="page">Welcome: {% if user.is_superuser %} {{ user.first_name }} {% else %} {{ user.username }} {% endif %}</a>
+
+                     </li>
+                    {% else  %}
+
+                    <li class="nav-item">
+                        <a  class="nav-link badge bg-secondary fs-6 active" aria-current="page" href="{% url 'login' %}">Login</a>
+                    </li>
+
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--main content-->
+    <main class="min-vh-100">
+    {% block content %}
+        <div class="container-fluid bg-dark text-white text-center">
+            <div class="display-1 ">Welcome</div>
+            <div class="lead"> Biomass Briquettes Manufacturer & Seller </div>
+            <div class=" container w-50 lead fs-6">
+                    <p class="intro py-2 pb-2 mb-5"> </p>
+            </div>
+        </div>
+
+        <!--mission and vision-->
+        <div class="container w-75">
+            <h1><b> Mission</b></h1><hr><br>
+            <h5 class="lead">At Chaudhary BioEnergies, our mission is to lead the sustainable revolution in energy production through the manufacturing and utilization of high-quality biomass briquettes. We are committed to providing eco-friendly solutions that empower communities, foster environmental stewardship, and contribute to a cleaner and greener future. Our mission is to be a driving force in the transition towards renewable energy, promoting responsible consumption, and leaving a positive impact on the planet.</h5>
+        </div>
+        <div class="container w-75 mt-5">
+            <h1><b> Vision</b></h1><hr><br>
+            <h5 class="lead">Our vision at Chaudhry BioEnergies is to be a globally recognized leader in the biomass briquette industry, renowned for our innovation, reliability, and commitment to environmental sustainability. We aspire to create a world where biomass briquettes are a mainstream and preferred energy source, replacing traditional fossil fuels. Through cutting-edge technology, ethical practices, and community engagement, we envision a future where Chaudhry BioEnergies plays a pivotal role in shaping a sustainable and resilient energy landscape.</h5>
+        </div>
+
+        <!--product details-->
+        <div id="product_scroll" class="container w-75 mt-5">
+            <h1><b> Product Details</b></h1><hr><br>
+            <div class="row">
+                <div class="col-md-4 my-2">
+                    <div class="card" style="overflow:scroll; height:400px;" >
+                        <img class="card-img-top sticky-top w-100 h-50" src="{% static 'images/70mm.jpeg' %}" alt="70 mm image">
+                        <div class="card-body">
+                            <h4 class="card-title">70 MM</h4>
+                            <p class="card-text">
+                                <dl class="">
+                                    <dt class="">Optimal Size:</dt>
+                                    <dd class="">The 70 mm diameter ensures uniformity and efficient burning.</dd>
+                                    <dt class="">High Calorific Value:</dt>
+                                    <dd class="">Provides a high energy yield for various applications.</dd>
+                                    <dt class="">Low Moisture Content:</dt>
+                                    <dd class="">Enhances combustion efficiency and reduces smoke emissions.</dd>
+                                    <dt class="">Environmentally Friendly:</dt>
+                                    <dd class="">Manufactured from renewable biomass sources, contributing to a carbon-neutral energy cycle.</dd>
+                                    <dt class="">Versatile Usage:</dt>
+                                    <dd class="">Suitable for a range of applications, including industrial heating, cooking, and power generation.</dd>
+                                </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 my-2">
+                    <div class="card" style="overflow:scroll; height:400px;" >
+
+                        <img class="card-img-top sticky-top w-100 h-50"  src="{% static 'images/90mm.jpeg' %}" alt="70 mm image">
+                        <div class="card-body">
+                            <h4 class="card-title">90 MM</h4>
+                            <p class="card-text">
+                                <dl class="">
+                                    <dt class="">Generous Size: </dt>
+                                    <dd class="">The 90 mm diameter ensures extended burn times and efficient energy release.</dd>
+                                    <dt class="">High Calorific Value: </dt>
+                                    <dd class="">Offers a potent energy source suitable for diverse applications.</dd>
+                                    <dt class="">Low Moisture Content:</dt>
+                                    <dd class="">Maximizes combustion efficiency, minimizing emissions.</dd>
+                                    <dt class="">Sustainable Sourcing:</dt>
+                                    <dd class="">Derived from renewable biomass, promoting environmental sustainability.</dd>
+                                    <dt class="">Versatility:</dt>
+                                    <dd class=""> Ideal for a range of applications, from industrial heating to power generation.</dd>
+                                </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 my-2">
+                    <div class="card" style="overflow:scroll; height:400px;" >
+                        <img class="card-img-top sticky-top w-100 h-50" src="{% static 'images/pencil.jpeg' %}" alt="70 mm image">
+                        <div class="card-body">
+                            <h4 class="card-title">Pencil</h4>
+                            <p class="card-text">
+                                <dl class="">
+                                    <dt class="">Compact Design:  </dt>
+                                    <dd class="">Pencil-sized dimensions for ease of handling and storage.</dd>
+                                    <dt class="">Efficient Combustion: </dt>
+                                    <dd class="">Optimized for efficient burning, providing a reliable source of energy.</dd>
+                                    <dt class="">Low Environmental Impact:</dt>
+                                    <dd class=""> Manufactured from organic biomass materials, contributing to a reduced carbon footprint.</dd>
+                                    <dt class="">Versatile Usage: </dt>
+                                    <dd class="">Suitable for various applications, including household heating and cooking.</dd>
+
+                                </dl>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!--about us-->
+        <div id="info_scroll" class="container w-75 mt-5">
+            <h1><b>About Us</b></h1><hr><br>
+            <p>
+                Chaudhary BioEnergies, trading as Chaudhary Girraj and Sons, is a prominent player in sustainable energy. Focused on premium biomass briquettes, the company is dedicated to eco-friendly alternatives, envisioning a global impact on the transition to renewable energy for a cleaner future.
+            </p>
+            <h5>Infrastructure</h5>
+            <p>Infrastructure We have developed a well-equipped and modern infrastructural unit which is installed with sophisticated technologies to produce large number of biomass briquettes at a same point of time. Apart from this, we have segregated our unit into different segments ensuring smooth flow of activities.</p>
+
+        </div>
+
+    {% endblock %}
+    </main>
+
+    <!--footer-->
+
+    <footer class="footer container-fluid" style="background-color:#827717;">
+        {% block footer %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img class="img-fluid my-4 mx-auto" style="float:left; width:300px; height:200px; border-radius:20px;" src="{% static 'images/logo.jpeg'%}" alt="Logo">
+
+                    </div>
+                    <div class="col-md-6">
+                        <h1>Contact Us</h1>
+                        <dl class="row">
+                            <dt class="col-sm-2">Name: </dt>
+                            <dd class="col-sm-10">Girraj Chaudhary</dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="col-sm-2">Address: </dt>
+                            <dd class="col-sm-10">Mamoni, Tehsil-Shahbad, District Baran, Rajasthan, PIN- 325217 </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="col-sm-2">Contact: </dt>
+                            <dd class="col-sm-10">+91 9425126230</dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="col-sm-2">Gmail: </dt>
+                            <dd class="col-sm-10">girrajsharma.gs3482@gmail.com</dd>
+                        </dl>                    </div>
+                    <div class="col-md-3">
+                        <h1>Follow us</h1>
+                        <h2><i class="bi bi-facebook mx-2"></i>Facebook</h2>
+                        <h2><i class="bi bi-twitter mx-2"></i>Twitter</h2>
+                        <h2><i class="bi bi-instagram mx-2"></i>Instagram</h2>
+                        <p class="mt-4">&copy; 2024 Your Website. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </footer>
+
+</body>
+</html>
+

@@ -1,0 +1,48 @@
+<!-- myapp/templates/signup.html -->
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+  <!--<div class="container">
+    <div class="jumbotron">
+        <h2>Sign Up</h2>
+    <form method="post" action="{% url 'signup' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Sign Up</button>
+    </form>
+    </div>
+  </div> -->
+
+
+    <div class="container-fluid">
+    <div class="jumbotron form-group">
+        {% include 'message.html'%}
+      <form method="post" action="{% url 'signup' %}" class="post-form">
+        {% csrf_token %}
+        <div class=" container form-group mt-5 " style=" border: 2px solid black; border-radius: 10px;">
+          <h2>Sign Up</h2>
+          <label for="{{ form.username.id_for_label }}">Username:</label>
+          <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:'' }}">
+          <div class="form-text text-muted">*Required. 150 characters or fewer.</div>
+          <label for="{{ form.password1.id_for_label }}">Password:</label>
+          <input type="password" class="form-control" id="{{ form.password1.id_for_label }}" name="{{ form.password1.html_name }}" value="{{ form.password1.value|default_if_none:'' }}">
+
+          <ul class="text-muted">
+                    <li >Your password can’t be too similar to your other personal information.</li>
+                    <li >Your password must contain at least 8 characters.</li>
+                    <li >Your password can’t be a commonly used password.</li>
+                    <li >Your password can’t be entirely numeric.</li>
+          </ul>
+          <label for="{{ form.password2.id_for_label }}">Password confirmation::</label>
+          <input type="password" class="form-control" id="{{ form.password2.id_for_label }}" name="{{ form.password2.html_name }}" value="{{ form.password2.value|default_if_none:'' }}">
+          <div class="form-text text-muted">Enter the same password as before, for verification.</div>
+
+          <br><button type="submit" class="btn btn-primary">Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

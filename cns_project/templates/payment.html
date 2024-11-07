@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{{ customer_form.media }}
+{% block title %} Payment {% endblock %}
+{% block content %}
+
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <!--<a  style="float:right;" href="#" class="btn btn-primary ">ADD</a>-->
+            {% include 'message.html' %}
+
+            <h1> Add Payments </h1>
+            <form class="form-group post-form " method="post" action="">
+                {% csrf_token %}
+                <!--{{ payment_form.as_p }}-->
+
+                <label for="id_customer">Customer:</label>
+                <select name="customer" id="id_customer"  class=" form-control form-select" required>
+                    {% for customer, label in payment_form.customer.field.choices %}
+                        <option value="{{customer}}">{{label}}</option>
+                    {% endfor %}
+                </select>
+                <label for="id_payment_method">Payment Method:</label>
+                <select name="payment_method" id="id_payment_method"  class=" form-control form-select" required>
+                    {% for payment_method, label in payment_form.payment_method.field.choices %}
+                        <option value="{{payment_method}}">{{label}}</option>
+                    {% endfor %}
+                </select>
+<!--                <label for="id_payment_status">Payment Status:</label>-->
+<!--                <select name="payment_status" id="id_payment_status"  class=" form-control form-select">-->
+<!--                    {% for payment_status, label in payment_form.payment_status.field.choices %}-->
+<!--                        <option value="{{payment_status}}">{{label}}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+                <label for="id_payment_amount">Payment Amount:</label>
+                <input type="{{payment_form.payment_amount.input_type}}" class="form-control" id="id_payment_amount" name="payment_amount" value="{{ form.payment_amount.value|default_if_none:'' }}" required>
+                <br><button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

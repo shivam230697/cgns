@@ -1,0 +1,35 @@
+<!-- myapp/templates/login.html -->
+
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+  <div class="container-fluid">
+    <div class="jumbotron form-group">
+      {% include 'message.html'%}
+      <form method="post" action="{% url 'login' %}" class="post-form">
+        {% csrf_token %}
+        <div class=" container form-group mt-5 " style="background-color: grey; border: 2px solid black; border-radius: 10px;">
+          <h2>Login</h2>
+          <label for="{{ form.username.id_for_label }}">User Name:</label>
+          <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:'' }}">
+          <br>
+          <label for="{{ form.password.id_for_label }}">Password:</label>
+          <input type="password" class="form-control password-input" id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" value="{{ form.username.value|default_if_none:'' }}">
+          <br>
+          <input type="checkbox" onclick="togglePassword()"> Show Password<br>
+          <br><button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+    <script>
+        function togglePassword() {
+          var passwordInput = document.querySelector(".password-input");
+          if (passwordInput.type === "password") {
+              passwordInput.type = "text";
+          } else {
+              passwordInput.type = "password";
+          }
+      }
+    </script>
+{% endblock %}

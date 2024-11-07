@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% load custom_filters %}
+{% block title %}Customers {% endblock %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center"><marquee direction="right">Raw Material Expenses</marquee></h1> <hr>
+        <div class="d-flex justify-content-evenly align-items-center">
+            <div class="card text-center bg-danger" style="width:100px; height:75px;overflow:auto;">
+                <p>Total Price</p>
+               <h5 class=" card-title" id="total_data"> {{expense_total}} </h5>
+            </div>
+            <div class="card text-center bg-primary" style="width:100px; height:75px;overflow:auto;">
+                <p>Diesel</p>
+               <h5 id="diesel_price" class=" card-title"> {{diesel_price}} </h5>
+            </div>
+            <div class="card text-center bg-warning" style="width:100px; height:75px;overflow:auto;">
+                <p>Labour Price</p>
+               <h5 id="labour_price" class=" card-title">{{labour_price}} </h5>
+            </div>
+            <div class="card text-center bg-success" style="width:100px; height:75px;overflow:auto;">
+                <p>Tripal Price</p>
+               <h5 id="tripal_price" class=" card-title"> {{tripal_price}} </h5>
+            </div>
+            <div class="card text-center bg-secondary" style="width:100px; height:75px;overflow:auto;">
+                <p>Extra Price</p>
+               <h5 id="extra_price" class=" card-title"> {{extra_price}} </h5>
+            </div>
+
+        </div>
+        <div class="  my-5 d-flex justify-content-evenly ">
+            <form class="form " method="post">
+                {% csrf_token %}
+                {{ raw_expense_form }}<br>
+                <input type="button" class="btn btn-primary " value="Submit" id="save-expense">
+            </form>
+
+            <div class="table-responsive" style="overflow:scroll; height:250px;">
+                <table class="table table-stripe table-hover">
+                    <thead class=" sticky-top">
+                        <tr class="">
+                            <th scope="col">#</th>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        {% for data in expense_data %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ data.expense_id }}</td>
+                                <td>{{ data.type }}</td>
+                                <td>{{ data.description }}</td>
+                                <td>{{ data.expense_amount |indian_currency_format }} &#8377;</td>
+                                <td>{{data.created_at |date:"d-m-y H:i:s A"}}</td>
+                                <td>{{data.updated_at |date:"d-m-y H:i:s A"}}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+<!--        <button id="generate_pdf">Generate PDF</button>-->
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+        console.log("refresh");
+
+        function update_data(){
+            console.log("update");
+        }
+        function formatDate(date) {
+            var year = date.getFullYear().toString().substr(-2);
+            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            var day = date.getDate().toString().padStart(2, '0');
+            var hours = date.getHours().toString().padStart(2, '0');
+            var minutes = date.getMinutes().toString().padStart(2, '0');
+            var seconds = date.getSeconds().toString().padStart(2, '0');
+            var ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+        $("#save-expense").click(function () {
+            console.log("clicked");
+            var raw_expense_type = $("#id_type").val();
+            var raw_expense_description = $("#id_description").val();
+            var raw_expense_amount = $("#id_expense_amount").val();
+            console.log(raw_expense_type);
+            console.log(raw_expense_description);
+            console.log(raw_expense_amount);
+            diesel = "{{diesel_price}}";
+            my_data = {type:raw_expense_type, description:raw_expense_description, expense_amount:raw_expense_amount}
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'raw_expense_add' %}',
+                data: my_data,
+                success: function(data) {
+                    if (data.success) {
+                        var expenseData = data.expense_data;
+                        // Empty the table
+                        $('.table tbody').empty();
+                        for (var i = 0; i < expenseData.length; i++) {
+                            // Convert created_at and updated_at to Date objects
+                            var createdAt = new Date(expenseData[i].created_at);
+                            var updatedAt = new Date(expenseData[i].updated_at);
+                            // Format the dates
+                            var createdAtFormatted = formatDate(createdAt);
+                            var updatedAtFormatted = formatDate(updatedAt);
+                            console.log(createdAtFormatted, updatedAtFormatted);
+                            console.log(i+1, expenseData[i].expense_id);
+                            $('.table tbody').append('<tr><td>' + (i+1) + '</td><td>' + expenseData[i].expense_id + '</td><td>' + expenseData[i].type + '</td><td>' + expenseData[i].description + '</td><td>' + expenseData[i].expense_amount + '</td><td>' + createdAtFormatted + '</td><td>' + updatedAtFormatted + '</td></tr>');
+                            $("#total_data").text(data.expense_total);
+                            $("#diesel_price").text(data.diesel_price);
+                            $("#labour_price").text(data.labour_price);
+                            $("#tripal_price").text(data.tripal_price);
+                            $("#extra_price").text(data.extra_price);
+                        }
+                    } else {
+                        console.error('Error saving data:', data.errors);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error creating data:', error);
+                }
+            });
+
+        });
+
+        $("#generate_pdf").click(function () {
+            /*var doc = new jsPDF();
+            doc.autoTable({ html: '.table' });
+            doc.save('table.pdf');*/
+        });
+
+    });
+</script>
+{% endblock %}

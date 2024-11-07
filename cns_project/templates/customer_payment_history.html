@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Payments History {% endblock %}
+{% block content %}
+    <div class="container">
+        {% include 'message.html'%}
+        <h1 class="text-center">{{customer}}</h1>
+        <div class="table-responsive">
+            <h2>Invoice History</h2>
+            <table class="table" style="overflow:scroll;">
+                <thead>
+                    <tr>
+                        <th scope="row">#</th>
+                        <th>Invoice Reference</th>
+                        <th> Invoice Amount</th>
+                    </tr>
+                </thead>
+                {% for i_data in customer_invoices %}
+                <tbody>
+                    <tr>
+                        <td>{{ forloop.counter}}</td>
+                        <td>{{i_data.invoice_id}}</td>
+                        <td>{{i_data.payment}} Rs</td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="table-responsive">
+            <h2>Payment History</h2>
+            <table class="table" style="overflow:scroll;">
+                <thead>
+                    <tr>
+                        <th scope="row">#</th>
+                        <th>Payment Reference</th>
+                        <th> Paid Amount</th>
+                    </tr>
+                </thead>
+                {% for c_data in customer_payments %}
+                <tbody>
+                    <tr>
+                        <td>{{ forloop.counter}}</td>
+                        <td>{{c_data.payment_id}}</td>
+                        <td>{{c_data.payment_amount}} Rs</td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="row border border-dark border-5">
+            <div class="col-6">
+                <dl class="row">
+                    <dt class="col-6">Invoice Total</dt>
+                    <dd class="col-6">{{invoice_total}} Rs</dd>
+                </dl>
+                <dl class="row ">
+                    <dt class="col-6">Total Paid</dt>
+                    <dd class="col-6">{{paid_total}} Rs</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-6">Remaining Amount </dt>
+                    <dd class="col-6">{{invoice_total}} - {{paid_total}} = {{remaining_amount}} Rs</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+{% endblock %}
