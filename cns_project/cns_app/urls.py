@@ -36,4 +36,6 @@ urlpatterns = [
     path('logout/', user_logout, name='logout'),
     path('signup/', user_signup, name='signup'),
 
+    path('get_customer_address/<int:customer_id>/', views.get_customer_address, name='get_customer_address'),
+
 ]

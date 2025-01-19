@@ -432,8 +432,25 @@ def dashboard(request):
                 }
             )
 
+    else:
+        invoices = InvoiceModel.objects.all()  # Fetch all invoices
+        invoice_total_quantity = sum(
+            invoice.item_quantity for invoice in invoices)  # Calculate total quantity from all invoices
 
-    return render(request, 'dashboard.html', {'data': '', 'btn_name': "button_name"})
+        raw_materials = RawMaterialModel.objects.all()  # Fetch all raw materials
+        raw_total_net_weight = sum(raw_material.net_wt for raw_material in raw_materials)  # Calculate total net weight
+
+        productions = ProductionModel.objects.all()  # Fetch all production records
+        production_total_net_weight = sum(
+            production.product_net_weight for production in productions)  # Calculate total net weight
+
+        context = {
+            'invoices': invoices,
+            'total_quantity': invoice_total_quantity,
+        }
+        print()
+
+    return render(request, 'dashboard.html', {'data': '', 'btn_name': "button_name", 'total_sales': invoice_total_quantity, 'total_raw_material_weight': raw_total_net_weight, 'total_production_weight': production_total_net_weight})
 
 
 
@@ -563,3 +580,20 @@ def payment_history(request, customer_id):
             'remaining_amount': remaining_amount
         }
     )
+
+# views.py
+from django.http import JsonResponse
+from .models import Customer
+
+def get_customer_address(request, customer_id):
+    try:
+        customer = Customer.objects.get(id=customer_id)
+        data = {
+            'address': customer.customer_address,
+            'city': customer.customer_city,
+            'state': customer.customer_state,
+            'zip_code': customer.zip_code,
+        }
+        return JsonResponse(data)
+    except Customer.DoesNotExist:
+        return JsonResponse({'error': 'Customer not found'}, status=404)

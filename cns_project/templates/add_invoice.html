@@ -180,5 +180,82 @@
             updateFinalAmount();
         });
     });
+
+
+
+
+    $('#id_customer').change(function () {
+            var customerId = $(this).val();
+            if (customerId) {
+                $.ajax({
+                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
+                    method: 'GET',
+                    success: function (data) {
+                        $('#id_shipping_address').val(data.address);
+                        $('#id_shipping_city').val(data.city);
+                        $('#id_shipping_state').val(data.state);
+                        $('#id_shipping_zip_code').val(data.zip_code);
+                    },
+                    error: function () {
+                        alert('Error fetching address details.');
+                    }
+                });
+            } else {
+                // Clear the fields if no customer is selected
+                $('#id_shipping_address').val('');
+                $('#id_shipping_city').val('');
+                $('#id_shipping_state').val('');
+                $('#id_shipping_zip_code').val('');
+            }
+        });$('#id_customer').change(function () {
+            var customerId = $(this).val();
+            if (customerId) {
+                $.ajax({
+                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
+                    method: 'GET',
+                    success: function (data) {
+                        $('#id_shipping_address').val(data.address);
+                        $('#id_shipping_city').val(data.city);
+                        $('#id_shipping_state').val(data.state);
+                        $('#id_shipping_zip_code').val(data.zip_code);
+                    },
+                    error: function () {
+                        alert('Error fetching address details.');
+                    }
+                });
+            } else {
+                // Clear the fields if no customer is selected
+                $('#id_shipping_address').val('');
+                $('#id_shipping_city').val('');
+                $('#id_shipping_state').val('');
+                $('#id_shipping_zip_code').val('');
+            }
+        });
+
+
+    $('#id_customer').change(function () {
+            var customerId = $(this).val();
+            if (customerId) {
+                $.ajax({
+                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
+                    method: 'GET',
+                    success: function (data) {
+                        $('#id_shipping_address').val(data.address);
+                        $('#id_shipping_city').val(data.city);
+                        $('#id_shipping_state').val(data.state);
+                        $('#id_shipping_zip_code').val(data.zip_code);
+                    },
+                    error: function () {
+                        alert('Error fetching address details.');
+                    }
+                });
+            } else {
+                // Clear the fields if no customer is selected
+                $('#id_shipping_address').val('');
+                $('#id_shipping_city').val('');
+                $('#id_shipping_state').val('');
+                $('#id_shipping_zip_code').val('');
+            }
+        });
 </script>
 {% endblock %}
