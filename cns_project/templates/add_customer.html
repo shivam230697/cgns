@@ -10,7 +10,7 @@
             {% include 'message.html'%}
             <form class="form-group post-form" method="post" action="">
                 {% csrf_token %}
-                <label for="id_customer_name">Customer Name:*</label>
+                <label for="id_customer_name">Company Name:*</label>
                 <input  class="form-control" type="text" id="id_customer_name" name="customer_name" value="{{ form.customer_name.value|default_if_none:'' }}" required>
                 <label for="id_customer_number">Customer Number:*</label>
                 <input type="number" class="form-control" id="id_customer_number" name="customer_number" value="{{ form.customer_number.value|default_if_none:'' }}" required>

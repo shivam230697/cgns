@@ -304,6 +304,11 @@ def add_invoice(request):
             invoice_model.driver_number = invoice_form.cleaned_data['driver_number']
             invoice_model.assigned_vehicle = invoice_form.cleaned_data['assigned_vehicle']
             invoice_model.paid_amount = invoice_form.cleaned_data['paid_amount']
+            invoice_model.invoice_number = invoice_form.cleaned_data['invoice_number']
+            invoice_model.e_way_bill = invoice_form.cleaned_data['e_way_bill']
+            invoice_model.item_type = invoice_form.cleaned_data['item_type']
+            invoice_model.item_rate = invoice_form.cleaned_data['item_rate']
+            invoice_model.item_quantity = invoice_form.cleaned_data['item_quantity']
             if invoice_model.paid_amount > invoice_model.payment:
                 messages.error(request, 'Enter valid paid amount')
                 return render(request, "add_invoice.html", {'invoice_form': InvoiceForm()})

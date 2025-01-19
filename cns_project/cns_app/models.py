@@ -122,6 +122,8 @@ class InvoiceModel(models.Model):
     from .environment import Environment
     fg_env = Environment()
     invoice_id = models.CharField(max_length=20, editable=False, unique=True)
+    invoice_number = models.IntegerField(blank=False, null=False)
+    e_way_bill = models.CharField(max_length=20 , unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     item_45mm = models.BooleanField(default=False)
     item_90mm = models.BooleanField(default=False)
@@ -135,6 +137,9 @@ class InvoiceModel(models.Model):
     total_45mm = models.DecimalField(max_digits=8, decimal_places=2)
     total_90mm = models.DecimalField(max_digits=8, decimal_places=2)
     total_pencil = models.DecimalField(max_digits=8, decimal_places=2)
+    item_type = models.CharField(max_length=20, choices=fg_env.item_choices, default='None')
+    item_quantity = models.DecimalField(max_digits=12, decimal_places=2)
+    item_rate = models.DecimalField(max_digits=8, decimal_places=2)
     total = models.DecimalField(null=True, max_digits=12, editable=False, decimal_places=2)
     gst = models.IntegerField()
     discount = models.IntegerField(default=0, blank=True, null=True)

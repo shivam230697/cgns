@@ -62,7 +62,8 @@ class InvoiceForm(forms.Form):
     from .environment import Environment
     invoice_env = Environment()
     customer = forms.ModelChoiceField(queryset=Customer.objects.all(), required=True)
-
+    invoice_number = forms.IntegerField()
+    e_way_bill = forms.CharField(max_length=50)
     total = forms.DecimalField(decimal_places=2, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     gst = forms.IntegerField()
     discount = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False, initial=0)
@@ -88,6 +89,9 @@ class InvoiceForm(forms.Form):
                                         widget=forms.NumberInput(attrs={'class': 'form-control'}))
     price_item3 = forms.DecimalField(label='Price for Item 3', required=False,
                                      widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    item_type = forms.ChoiceField(choices=invoice_env.item_choices, required=True)
+    item_quantity = forms.DecimalField(label='Quantity for Item', required=True)
+    item_rate = forms.DecimalField(label='Rate for Item', required=True)
     shipping_address = forms.CharField(max_length=50)
     shipping_state = forms.ChoiceField(choices=invoice_env.STATE_CHOICES, label="Shipping State")
     shipping_city = forms.CharField(max_length=20)
