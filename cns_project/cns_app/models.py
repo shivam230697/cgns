@@ -90,7 +90,7 @@ class Customer(models.Model):
     from .environment import Environment
     state_env = Environment
     customer_name = models.CharField(max_length=20)
-    customer_number = models.PositiveIntegerField()
+    customer_number = models.CharField(max_length=50)
     customer_address = models.CharField(max_length=100)
     customer_state = models.CharField(max_length=20, choices=state_env.STATE_CHOICES)
     customer_city = models.CharField(max_length=20)

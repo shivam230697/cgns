@@ -121,7 +121,7 @@ class CustomerForm(forms.Form):
     from .environment import Environment
     state_env = Environment()
     customer_name = forms.CharField()
-    customer_number = forms.IntegerField()
+    customer_number = forms.CharField(max_length=50)
     customer_address = forms.CharField()
     customer_state = forms.ChoiceField(choices=state_env.STATE_CHOICES)
     customer_city = forms.CharField(max_length=20)
