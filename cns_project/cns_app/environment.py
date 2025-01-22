@@ -1,7 +1,7 @@
 class Environment:
     item_choices = (
+        ('Biomass Briquettes Mustard Husk 90 mm', 'Biomass Briquettes Mustard Husk 90 mm'),
         ('45 mm', '45 mm'),
-        ('90 mm', '90 mm'),
         ('pencil', 'pencil'),
     )
     STATE_CHOICES = [

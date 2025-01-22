@@ -4,152 +4,160 @@
 {% block title %} Add Invoice {% endblock %}
 {% block content %}
 
+<div class="container form-group mt-5">
+    <div class="jumbotron">
+        {% include 'message.html' %}
+        <a style="float:right;" href="{% url 'add_customer' %}" class="btn btn-primary">Add Customer</a>
 
-    <div class="container form-group  mt-5" >
-        <div class="jumbotron  ">
-            {% include 'message.html'%}
-            <a  style="float:right;" href="{% url 'add_customer' %}" class="btn btn-primary ">add customer</a>
+        <h1 class="mb-4">Add Invoice</h1>
+        <form action="" method="POST" class="post-form">
+            {% csrf_token %}
 
-            <h1>  Add Invoice </h1>
-            <form action = "" method = "POST" class="post-form">
-                {% csrf_token %}
-
-
-                <label for="id_customer">Customer:</label>
-
-                <select name="customer" id="id_customer"  class=" form-control form-select" required>
+            <div class="mb-3">
+                <label for="id_customer" class="form-label">Customer:</label>
+                <select name="customer" id="id_customer" class="form-control form-select" required>
                     {% for customer, label in invoice_form.customer.field.choices %}
-                        <option value="{{customer}}">{{label}}</option>
+                        <option value="{{ customer }}">{{ label }}</option>
                     {% endfor %}
                 </select>
+            </div>
 
-                <label for="id_invoice_number">Invoice Number:</label>
-                <input type="text" class="form-control" id="id_invoice_number" name="invoice_number" value="{{ form.invoice_number.value|default_if_none:'' }}" required>
+            <div class="mb-3">
+                <label for="id_invoice_number" class="form-label">Invoice Number:</label>
+                <input type="text" class="form-control" id="id_invoice_number" name="invoice_number" placeholder="Enter Invoice Number" value="{{ form.invoice_number.value|default_if_none:'' }}" required>
+            </div>
 
-                <label for="id_e_way_bill">E-Way Bill:</label>
-                <input type="text" class="form-control" id="id_e_way_bill" name="e_way_bill" value="{{ form.e_way_bill.value|default_if_none:'' }}" required>
+            <div class="mb-3">
+                <label for="id_e_way_bill" class="form-label">E-Way Bill:</label>
+                <input type="text" class="form-control" id="id_e_way_bill" name="e_way_bill" placeholder="Enter E-Way Bill" value="{{ form.e_way_bill.value|default_if_none:'' }}" required>
+            </div>
 
+            <fieldset class="border p-3 mb-3">
+                <legend class="w-auto">Item Details</legend>
                 <div class="row">
-                    <div class="col-4">
-                        <label for="id_item_type" class="col-form-label mb-2">Item Type:</label>
+                    <div class="col-md-4 mb-3">
+                        <label for="id_item_type" class="form-label">Item Type:</label>
                         <select name="item_type" id="id_item_type" class="form-control form-select" required>
                             {% for item_type, item_name in invoice_form.item_type.field.choices %}
-                                <option value="{{item_type}}">{{item_name}}</option>
+                                <option value="{{ item_type }}">{{ item_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-4">
-                        <label for="id_item_quantity" class="col-form-label mb-2">Quantity:</label>
-                        <input type="{{invoice_form.item_quantity.input_type}}" class="form-control" id="id_item_quantity" name="item_quantity" value="{{ form.item_quantity.value|default_if_none:'' }}">
+                    <div class="col-md-4 mb-3">
+                        <label for="id_item_quantity" class="form-label">Quantity:</label>
+                        <input type="{{ invoice_form.item_quantity.input_type }}" class="form-control" id="id_item_quantity" name="item_quantity" placeholder="Enter Quantity" value="{{ form.item_quantity.value|default_if_none:'' }}">
                     </div>
-                    <div class="col-4">
-                        <label for="id_item_rate" class="col-form-label mb-2">Rate:</label>
-                        <input type="{{invoice_form.item_rate.input_type}}" class="form-control" id="id_item_rate" name="item_rate" value="{{ form.item_rate.value|default_if_none:'' }}">
-                    </div>
-                </div>
-
-               <!-- <div class="row item45mm mt-2">
-                    <div class="col-4 text-start">
-                        <label for="id_item1">Item 45mm:</label>
-                        <input  class="form-check-input" type="checkbox" id="id_item1" name="item45mm" value="1" ><br>
-                    </div>
-                    <div class="col-4 text-center">
-                        <label for="id_quantity_item1">quantity 45mm:</label>
-                        <input type="{{invoice_form.quantity_item1.input_type}}" class="" id="id_quantity_item1" name="quantity_item1" value="{{ form.quantity_item1.value|default_if_none:'' }}" >
-                    </div>
-                    <div class="col-4 text-end">
-                            Rate 45mm:
-                            <input type="{{invoice_form.price_item1.input_type}}" class="" id="id_price_item1" name="price_item1" value="{{ form.price_item1.value|default_if_none:'' }}" >
+                    <div class="col-md-4 mb-3">
+                        <label for="id_item_rate" class="form-label">Rate:</label>
+                        <input type="{{ invoice_form.item_rate.input_type }}" class="form-control" id="id_item_rate" name="item_rate" placeholder="Enter Rate" value="{{ form.item_rate.value|default_if_none:'' }}">
                     </div>
                 </div>
-                <div class="row item90mm mt-2">
-                    <div class="col-4 text-start">
-                        <label for="id_item2">Item 90mm:</label>
-                        <input  class="form-check-input" type="checkbox" id="id_item2" name="item90mm" value="1"><br>
-                    </div>
-                    <div class="col-4 text-center">
-                        <label for="id_quantity_item2">quantity 90mm:</label>
-                        <input type="{{invoice_form.quantity_item2.input_type}}" class="" id="id_quantity_item2" name="quantity_item2" value="{{ form.quantity_item2.value|default_if_none:'' }}">
-                    </div>
-                    <div class="col-4 text-end">
-                        <label for="id_price_item2">Rate 90mm:</label>
-                        <input type="{{invoice_form.price_item2.input_type}}" class="" id="id_price_item2" name="price_item2" value="{{ form.price_item2.value|default_if_none:'' }}">
-                    </div>
+            </fieldset>
+
+            <div class="mb-3">
+                <label for="total_id" class="form-label">Total:</label>
+                <input type="{{ invoice_form.total.input_type }}" class="form-control" id="total_id" name="total" value="{{ form.total.value|default_if_none:'' }}" readonly>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="id_gst" class="form-label">GST %:</label>
+                    <input type="{{ invoice_form.gst.input_type }}" class="form-control" id="id_gst" name="gst" value="5" required>
                 </div>
+                <div class="col-md-6">
+                    <label for="id_discount" class="form-label">Discount %:</label>
+                    <input type="{{ invoice_form.discount.input_type }}" class="form-control" id="id_discount" name="discount" placeholder="Enter Discount" value="{{ form.discount.value|default_if_none:'' }}">
+                </div>
+            </div>
 
-                <div class="row item_pencil mt-2">
-                    <div class="col-4 text-start">
-                        <label for="id_item3">Item pencil:</label>
-                        <input  class="form-check-input" type="checkbox" id="id_item3" name="item_pencil" value="1"><br>
-                    </div>
-                    <div class="col-4 text-center">
-                        <label for="id_quantity_item3">quantity pencil:</label>
-                        <input type="{{invoice_form.quantity_item3.input_type}}" class="" id="id_quantity_item3" name="quantity_item3" value="{{ form.quantity_item3.value|default_if_none:'' }}">
-                    </div>
-                    <div class="col-4 text-end">
-                        <label for="id_price_item3">Rate pencil:</label>
-                        <input type="{{invoice_form.price_item3.input_type}}" class="" id="id_price_item3" name="price_item3" value="{{ form.price_item3.value|default_if_none:'' }}">
-                    </div>
-                </div>-->
-                <label for="total_id">Total:</label>
-                <input type="{{invoice_form.total.input_type}}" class="form-control" id="total_id" name="total" value="{{ form.total.value|default_if_none:'' }}" readonly>
+            <div class="mb-3">
+                <label for="payment_id" class="form-label">Payment:</label>
+                <input type="{{ invoice_form.payment.input_type }}" name="payment" id="payment_id" class="form-control" placeholder="Amount to be paid" readonly>
+            </div>
 
-                <div class="row">
+            <div class="mb-3">
+                <label for="id_paid_amount" class="form-label">Advance:</label>
+                <input type="{{ invoice_form.paid_amount.input_type }}" class="form-control" id="id_paid_amount" name="paid_amount" value="0">
+            </div>
+
+            <fieldset class="border p-3 mb-3">
+                <legend class="w-auto">Shipping Details</legend>
+
+                <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="id_gst">GST %:</label>
-                        <input type="{{invoice_form.gst.input_type}}" class="form-control" id="id_gst" name="gst" value="{{ form.gst.value|default_if_none:'' }}" required>
+                        <label for="id_shipping_company_name" class="form-label">Shipping Company Name:</label>
+                        <input type="text" class="form-control" id="id_shipping_company_name" name="shipping_company_name" placeholder="Enter Company Name" value="{{ form.shipping_company_name.value|default_if_none:'' }}" required>
+                    </div>
 
+                    <div class="col-md-6">
+                        <label for="id_shipping_gstin" class="form-label">Shipping GSTIN:</label>
+                        <input type="text" class="form-control" id="id_shipping_gstin" name="shipping_gstin" placeholder="Enter Shipping GSTIN" value="{{ form.shipping_gstin.value|default_if_none:'' }}" required>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-md-6">
+                        <label for="id_shipping_state" class="form-label">Shipping State:</label>
+                            <select name="shipping_state" id="id_shipping_state" class="form-control form-select">
+                                {% for state_code, state_name in invoice_form.shipping_state.field.choices %}
+                                    <option value="{{ state_code }}">{{ state_name }}</option>
+                                {% endfor %}
+                            </select>
                     </div>
                     <div class="col-md-6">
-                        <label for="id_discount">Discount %:</label>
-                        <input type="{{invoice_form.discount.input_type}}" class="form-control" id="id_discount" name="discount" value="{{ form.discount.value|default_if_none:'' }}" >
+                        <label for="id_shipping_contact_person" class="form-label">Shipping Contact Person:</label>
+                        <input type="text" class="form-control" id="id_shipping_contact_person" name="shipping_contact_person" placeholder="Enter Shipping Contact Number" value="{{ form.shipping_contact_person.value|default_if_none:'' }}" required>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="id_shipping_city" class="form-label">Shipping City:</label>
+                        <input type="text" class="form-control" id="id_shipping_city" name="shipping_city" placeholder="Enter Shipping City" value="{{ form.shipping_city.value|default_if_none:'' }}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="id_shipping_zip_code" class="form-label">Shipping Zip Code:</label>
+                        <input type="text" class="form-control" id="id_shipping_zip_code" name="shipping_zip_code" placeholder="Enter Shipping Zip Code" value="{{ form.shipping_zip_code.value|default_if_none:'' }}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="id_shipping_state_code" class="form-label">Shipping State Code:</label>
+                        <input type="text" class="form-control" id="id_shipping_state_code" name="shipping_state_code" placeholder="Enter State Code" value="{{ form.shipping_state_code.value|default_if_none:'' }}" required>
+                    </div>
+                </div>
+            </fieldset>
 
 
 
-                <label for="payment_id">Payment:</label>
-                <input type="{{invoice_form.payment.input_type}}" name="payment" id="payment_id" class="form-control" placeholder="amount to be paid" readonly>
+            <!--DRIVER DETAILS-->
+            <fieldset class="border p-3 mb-3">
+                <legend class="w-auto">Driver Details</legend>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="id_driver_name" class="form-label">Driver Name:</label>
+                        <input type="text" class="form-control" id="id_driver_name" name="driver_name" placeholder="Enter Driver Name" value="{{ form.driver_name.value|default_if_none:'' }}" required>
+                    </div>
 
-                <label for="id_shipping_address">Shipping Address:</label>
-                <input type="text" class="form-control" id="id_shipping_address" name="shipping_address" value="{{ form.shipping_address.value|default_if_none:'' }}" required>
+                    <div class="col-md-4">
+                        <label for="id_driver_number" class="form-label">Driver Number:</label>
+                        <input type="tel" class="form-control" id="id_driver_number" name="driver_number" placeholder="Enter Driver Number" value="{{ form.driver_number.value|default_if_none:'' }}" required>
+                    </div>
 
-                <label for="id_customer">Shipping State:</label>
+                    <div class="col-md-4">
+                        <label for="id_assigned_vehicle" class="form-label">Vehicle Number:</label>
+                        <input type="text" class="form-control" id="id_assigned_vehicle" name="assigned_vehicle" placeholder="Enter Vehicle Number" value="{{ form.assigned_vehicle.value|default_if_none:'' }}" required>
+                    </div>
+                </div>
+            </fieldset>
 
-                <select name="shipping_state" id="id_shipping_state"  class=" form-control form-select">
-                    {% for state_code, state_name in invoice_form.shipping_state.field.choices %}
-                        <option value="{{state_code}}">{{state_name}}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="id_shipping_city">Shipping City:</label>
-                <input type="text" class="form-control" id="id_shipping_city" name="shipping_city" value="{{ form.shipping_city.value|default_if_none:'' }}" required>
-
-                <label for="id_shipping_zip_code">Shipping Zip Code:</label>
-                <input type="text" class="form-control" id="id_shipping_zip_code" name="shipping_zip_code" value="{{ form.shipping_zip_code.value|default_if_none:'' }}" required>
-
-                <label for="id_paid_amount">Paid Amount:</label>
-                <input type="{{invoice_form.paid_amount.input_type}}" class="form-control" id="id_paid_amount" name="paid_amount" value="{{ form.paid_amount.value|default_if_none:'' }}" >
-
-                <label for="id_driver_name">Driver Name:</label>
-                <input type="text" class="form-control" id="id_driver_name" name="driver_name" value="{{ form.driver_name.value|default_if_none:'' }}" required>
-
-                <label for="id_driver_number">Driver Number:</label>
-                <input type="tel" class="form-control" id="id_driver_number" name="driver_number" value="{{ form.driver_number.value|default_if_none:'' }}" required>
-
-                <label for="id_assigned_vehicle">Vehicle Number:</label>
-                <input type="text" class="form-control" id="id_assigned_vehicle" name="assigned_vehicle" value="{{ form.assigned_vehicle.value|default_if_none:'' }}" required>
-
-                <br><button type="submit" class="btn btn-primary mx-2 my-2">Submit</button>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
-
+</div>
 
 <script>
     $(document).ready(function () {
         var total = 0;
-        $("#id_item_quantity, #id_item_rate").prop("readonly", true);
+        $("#id_item_quantity, #id_item_rate").prop("readonly", false);
 
         function updateTotal() {
             var quantity = parseFloat($("#id_item_quantity").val()) || 0;
@@ -179,83 +187,38 @@
         $("#id_gst, #id_discount").on("input", function () {
             updateFinalAmount();
         });
+
+        $('#id_customer').change(function () {
+            var customerId = $(this).val();
+            if (customerId) {
+                $.ajax({
+                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
+                    method: 'GET',
+                    success: function (data) {
+                        $('#id_shipping_address').val(data.address);
+                        $('#id_shipping_city').val(data.city);
+                        $('#id_shipping_state').val(data.state);
+                        $('#id_shipping_zip_code').val(data.zip_code);
+                        $('#id_shipping_gstin').val(data.gstin); // Autofill GSTIN id_shipping_contact_person
+                        $('#id_shipping_state_code').val(data.state_code); // Autofill State Code
+                        $('#id_shipping_company_name').val(data.company_name); // Autofill Company Name
+                        $('#id_shipping_contact_person').val(data.contact_number);
+                    },
+                    error: function () {
+                        alert('Error fetching address details.');
+                    }
+                });
+            } else {
+                // Clear the fields if no customer is selected
+                $('#id_shipping_address').val('');
+                $('#id_shipping_city').val('');
+                $('#id_shipping_state').val('');
+                $('#id_shipping_zip_code').val('');
+                $('#id_shipping_gstin').val(''); // Clear GSTIN
+                $('#id_shipping_state_code').val(''); // Clear State Code
+                $('#id_shipping_company_name').val(''); // Clear Company Name
+            }
+        });
     });
-
-
-
-
-    $('#id_customer').change(function () {
-            var customerId = $(this).val();
-            if (customerId) {
-                $.ajax({
-                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
-                    method: 'GET',
-                    success: function (data) {
-                        $('#id_shipping_address').val(data.address);
-                        $('#id_shipping_city').val(data.city);
-                        $('#id_shipping_state').val(data.state);
-                        $('#id_shipping_zip_code').val(data.zip_code);
-                    },
-                    error: function () {
-                        alert('Error fetching address details.');
-                    }
-                });
-            } else {
-                // Clear the fields if no customer is selected
-                $('#id_shipping_address').val('');
-                $('#id_shipping_city').val('');
-                $('#id_shipping_state').val('');
-                $('#id_shipping_zip_code').val('');
-            }
-        });$('#id_customer').change(function () {
-            var customerId = $(this).val();
-            if (customerId) {
-                $.ajax({
-                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
-                    method: 'GET',
-                    success: function (data) {
-                        $('#id_shipping_address').val(data.address);
-                        $('#id_shipping_city').val(data.city);
-                        $('#id_shipping_state').val(data.state);
-                        $('#id_shipping_zip_code').val(data.zip_code);
-                    },
-                    error: function () {
-                        alert('Error fetching address details.');
-                    }
-                });
-            } else {
-                // Clear the fields if no customer is selected
-                $('#id_shipping_address').val('');
-                $('#id_shipping_city').val('');
-                $('#id_shipping_state').val('');
-                $('#id_shipping_zip_code').val('');
-            }
-        });
-
-
-    $('#id_customer').change(function () {
-            var customerId = $(this).val();
-            if (customerId) {
-                $.ajax({
-                    url: "{% url 'get_customer_address' 0 %}".replace('0', customerId),
-                    method: 'GET',
-                    success: function (data) {
-                        $('#id_shipping_address').val(data.address);
-                        $('#id_shipping_city').val(data.city);
-                        $('#id_shipping_state').val(data.state);
-                        $('#id_shipping_zip_code').val(data.zip_code);
-                    },
-                    error: function () {
-                        alert('Error fetching address details.');
-                    }
-                });
-            } else {
-                // Clear the fields if no customer is selected
-                $('#id_shipping_address').val('');
-                $('#id_shipping_city').val('');
-                $('#id_shipping_state').val('');
-                $('#id_shipping_zip_code').val('');
-            }
-        });
 </script>
 {% endblock %}

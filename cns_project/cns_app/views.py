@@ -309,6 +309,9 @@ def add_invoice(request):
             invoice_model.item_type = invoice_form.cleaned_data['item_type']
             invoice_model.item_rate = invoice_form.cleaned_data['item_rate']
             invoice_model.item_quantity = invoice_form.cleaned_data['item_quantity']
+            invoice_model.shipping_gstin = invoice_form.cleaned_data['shipping_gstin']
+            invoice_model.shipping_state_code = invoice_form.cleaned_data['shipping_state_code']
+            invoice_model.shipping_company_name = invoice_form.cleaned_data['shipping_company_name']
             if invoice_model.paid_amount > invoice_model.payment:
                 messages.error(request, 'Enter valid paid amount')
                 return render(request, "add_invoice.html", {'invoice_form': InvoiceForm()})
@@ -472,6 +475,7 @@ def add_customer(request):
             customer_model.customer_state = customer_form.cleaned_data['customer_state']
             customer_model.customer_city = customer_form.cleaned_data['customer_city']
             customer_model.zip_code = customer_form.cleaned_data['zip_code']
+            customer_model.customer_state_code = customer_form.cleaned_data['customer_state_code']
             customer_model.customer_gstin = customer_form.cleaned_data['customer_gstin'].upper()
 
             customer_model.payment_dues = 0
@@ -549,11 +553,14 @@ def view_invoice(request, invoice_id):
         integer_part = int(invoice.payment)
         decimal_part = invoice.payment - int(invoice.payment)
 
+        invoice_weight = round(float(invoice.item_quantity) / 1000, 2)
+        invoice_item_rate = round(float(invoice.item_rate)*1000, 2)
+
         words_payment = num2words(integer_part).capitalize() + " Rupees & " + num2words(decimal_part*100).capitalize() + " Paise"
         return render(request, 'view_invoice.html',
-                      {'invoice': invoice, 'customer': customer, 'words_payment': words_payment})
+                      {'invoice': invoice, 'customer': customer, 'words_payment': words_payment, 'invoice_weight': invoice_weight, 'invoice_item_rate': invoice_item_rate})
 
-    except:
+    except Exception as e:
 
         messages.info(request, "invoice data not found")
         return render(request, 'view_invoice.html')
@@ -593,6 +600,16 @@ def get_customer_address(request, customer_id):
             'city': customer.customer_city,
             'state': customer.customer_state,
             'zip_code': customer.zip_code,
+        }
+        data = {
+            "address": customer.customer_address,
+            "city": customer.customer_city,
+            "state": customer.customer_state,
+            "zip_code": customer.zip_code,
+            "gstin": customer.customer_gstin,
+            "state_code": customer.customer_state_code,
+            "company_name": customer.customer_name,
+            'contact_number': customer.customer_number,
         }
         return JsonResponse(data)
     except Customer.DoesNotExist:

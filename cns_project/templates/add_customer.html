@@ -31,6 +31,9 @@
                 <label for="id_customer_gstin">GSTIN:*</label>
                 <input type="text" class="form-control" id="id_customer_gstin" name="customer_gstin" value="{{ form.customer_gstin.value|default_if_none:'' }}" required>
 
+                <label for="id_customer_state_code">State Code:*</label>
+                <input type="text" class="form-control" id="id_customer_state_code" name="customer_state_code" value="{{ form.customer_state_code.value|default_if_none:'' }}" required>
+
                 <br><button  type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

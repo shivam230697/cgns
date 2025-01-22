@@ -65,7 +65,7 @@ class InvoiceForm(forms.Form):
     invoice_number = forms.IntegerField()
     e_way_bill = forms.CharField(max_length=50)
     total = forms.DecimalField(decimal_places=2, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    gst = forms.IntegerField()
+    gst = forms.IntegerField(initial=5)
     discount = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False, initial=0)
     payment = forms.DecimalField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     item45mm = forms.BooleanField(label='Item 1', required=False,
@@ -89,7 +89,7 @@ class InvoiceForm(forms.Form):
                                         widget=forms.NumberInput(attrs={'class': 'form-control'}))
     price_item3 = forms.DecimalField(label='Price for Item 3', required=False,
                                      widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    item_type = forms.ChoiceField(choices=invoice_env.item_choices, required=True)
+    item_type = forms.ChoiceField(choices=invoice_env.item_choices, required=True, initial='Biomass Briquettes Mustard Husk 90 mm')
     item_quantity = forms.DecimalField(label='Quantity for Item', required=True)
     item_rate = forms.DecimalField(label='Rate for Item', required=True)
     shipping_address = forms.CharField(max_length=50)
@@ -100,7 +100,22 @@ class InvoiceForm(forms.Form):
     driver_number = forms.IntegerField(initial=1234567890, required=True)
     assigned_vehicle = forms.CharField(max_length=10, initial='UNKNOWN', required=True)
     paid_amount = forms.DecimalField(max_digits=12, decimal_places=2, initial=0, required=True)
+    shipping_state_code = forms.CharField(max_length=3)
+    shipping_gstin = forms.CharField(max_length=50)
+    shipping_company_name = forms.CharField(max_length=50)
+    shipping_contact_number = forms.CharField(max_length=50)
 
+    def clean_e_way_bill(self):
+        e_way_bill = self.cleaned_data.get('e_way_bill')
+        if InvoiceModel.objects.filter(e_way_bill=e_way_bill).exists():
+            raise forms.ValidationError("E-Way Bill already exists.")
+        return e_way_bill
+
+    def clean_invoice_number(self):
+        invoice_number = self.cleaned_data.get('invoice_number')
+        if InvoiceModel.objects.filter(invoice_number=invoice_number).exists():
+            raise forms.ValidationError("Invoice Number already exists.")
+        return invoice_number
 
 class CustomerForm(forms.Form):
     from .environment import Environment
@@ -112,6 +127,7 @@ class CustomerForm(forms.Form):
     customer_city = forms.CharField(max_length=20)
     zip_code = forms.IntegerField(label='ZIP Code')
     customer_gstin = forms.CharField(max_length=20, required=True)
+    customer_state_code = forms.CharField(max_length=3)
     # payment_status = forms.ChoiceField(choices=[('pending', 'PENDING'), ('paid', 'PAID')])
     # payment_dues = forms.DecimalField()
 

@@ -1,230 +1,298 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>{% block title %}Invoice{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/practice.css' %}">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script  id="data" type="text/javascript" src="{% static 'js/practice.js' %}"></script>
-
-
 </head>
-<body class="base_body" >
+<body style="font-family: Arial, sans-serif; background-color: #f8f9fa;">
+
     {% if messages %}
         <div class="container mt-5">
             {% for message in messages %}
-              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
         </div>
     {% else %}
-        <button class="btn btn-primary mx-2 my-2"  id="printButton">Print</button>
-        <a href="{% url 'view_invoices' %}" class="btn btn-primary mx-2 my-2" id="back_btn"
-           style="float:right;" role="button">Back</a>
-        <div class="container border border-dark border-5 mt-5 text-center w-100 invoice-container" style="background-color:white;">
-            <div class="row">
-                <div class="col-md-8">
-                <div class="col fs-1 display-5 text-start mt-3"><b>Chaudhary Girraj & Sons</b></div>
-                <div class="text-start">Manufacturing Biomass Briquettes</div>
-                <div class="text-start">Shivpuri-Kota Highway, Mamoni (Rajasthan)</div>
-                <div class="text-start">Phone: +91 9425126230, 9827672604</div>
-                <div class=" text-start">Date: {{invoice.invoice_date |date:"d-m-Y" |safe}}</div>
-                </div>
-                <div class="col-md-4 text-end mt-2 ">
-                    <img class="  img-thumbnail" src="{% static 'images/logo.jpeg'%}" style="width:150px; height:150px; border:0px solid black; border-radius:30px;">
-                    <p>E-WAY BILL: {{invoice.e_way_bill}}</p>
-                    <p>INVOICE: invoice.invoice_number</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="fs-4 col text-center">TAX INVOICE</div>
-            </div>
-            <div class="row mx-1">
-                <div class="col-6 text-start">Invoice Id: {{invoice.invoice_id |safe}}</div>
-                <!--<div class="col-6 text-start">Date: {{invoice.invoice_date |date:"d-m-y" |safe}}</div>-->
-                <div class="col-6 text-end">GSTIN: 22AAAAA0000A1Z5</div>
-            </div>
-            <div class="row mx-1" style="border:1px black solid; font-size:12px;" >
-                <div class="col-6 text-start" style="border:1px black solid;"><u><span class="text-center fs-6">Customer Details:</span></u>
-                    <dl class="row">
-                        <dt class="col-md-2">Name:</dt>
-                        <dd class="col-md-10">{{customer.customer_name|safe}}</dd>
-                        <dt class="col-md-2">GSTIN:</dt>
-                        <dd class="col-md-10">{{customer.customer_gstin|safe}}</dd>
-                        <dt class="col-md-2">Address:</dt>
-                        <dd class="col-md-10">{{customer.customer_address}}, {{customer.customer_state}},  {{customer.zip_code}}</dd>
-                        <dt class="col-md-2">Number:</dt>
-                        <dd class="col-md-10">{{customer.customer_number}}</dd>
-                    </dl>
-                </div>
-                <div class="col-6 text-start" style="border:1px black solid;">
-
-                        <div class="col">
-                            <span class="fs-6"><u>Shipping Details:</u></span>
-                            <dl class="row">
-                                <dt class="col-md-5"><b>Address:</b></dt>
-                                <dd class="col-md-7">{{invoice.shipping_address}}, {{invoice.shipping_city}},  {{invoice.shipping_state}}, {{invoice.shipping_zip_code}}<br></dd>
-
-                                <dt class="col-md-5"><b>Driver Name:</b></dt>
-                                <dd class="col-md-7">{{invoice.driver_name}}<br></dd>
-                                <dt class="col-md-5"><b>Driver Number:</b></dt>
-                                <dd class="col-md-7">{{invoice.driver_number}}<br></dd>
-                                <dt class="col-md-5"><b>Vehicle Number:</b></dt>
-                                <dd class="col-md-7">{{invoice.assigned_vehicle}}<br></dd>
-                            </dl>
-                        </div>
-
-
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col table-responsive">
-                    <table class="table text-nowrap cd " >
-                        <thead class="border">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Product</th>
-                                <th scope="col">HSN/SAC</th>
-                                <th scope="col">Qty</th>
-                                <th scope="col">Price</th>
-
-                                <th scope="col">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody class="border">
-                            <tr>
-                                <th scope="row">1</th>
-                                    <td>Item 45mm</td>
-                                    <td>8</td>
-                                    <td>{{invoice.item_45mm_quantity}} Kg</td>
-                                    <td>{{invoice.item_45mm_rate}} Rs</td>
-                                    <td>{{invoice.total_45mm}} Rs</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                    <td>Item 90mm</td>
-                                    <td>8</td>
-                                    <td>{{invoice.item_90mm_quantity}} Kg</td>
-                                    <td>{{invoice.item_90mm_rate}} Rs</td>
-                                    <td>{{invoice.total_90mm}} Rs</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                    <td>Item Pencil</td>
-                                    <td>8</td>
-                                    <td>{{invoice.item_pencil_quantity}} Kg</td>
-                                    <td>{{invoice.item_pencil_rate}} Rs</td>
-                                    <td>{{invoice.total_pencil}} Rs</td>
-                            </tr>
-
-                        </tbody>
-                        <tfoot style="font-size:12px;">
-                            <tr>
-                                <td colspan="3" class="border"><strong >Payment details</strong></td>
-                                <td class="border" colspan="2"><strong>Sub Total</strong></td>
-                                <td class="border">{{invoice.total}} Rs</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" rowspan="3" class="border text-start" style="font-size:12px;">
-
-                                    <!--<dl class="row">
-                                        <dt class="col-4">Account No.</dt>
-                                        <dd class="col-8">39238765008</dd>
-                                        <dt class="col-4">BANK NAME</dt>
-                                        <dd class="col-8">HDFC</dd>
-                                        <dt class="col-4">BANK BRANCH</dt>
-                                        <dd class="col-8">CITY CENTER</dd>
-                                        <dt class="col-4">BANK IFSC</dt>
-                                        <dd class="col-8">HDFC000023</dd>
-                                    </dl>-->
-
-                                    <table class="table" >
-                                        <tr>
-                                            <th class="border-right">Account Number</th>
-                                            <td>39238765008</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Bank Name</th>
-                                            <td>HDFC</td>
-                                        </tr>
-                                        <tr>
-                                            <th>BANK BRANCH </th>
-                                            <td>CITY CENTER</td>
-                                        </tr>
-                                        <tr>
-                                            <th>BANK IFSC</th>
-                                            <td>HDFC000023</td>
-                                        </tr>
-                                    </table>
-                                </td>
-
-                                <td class="border" colspan="2"><strong>GST</strong></td>
-                                <td class="border">{{invoice.gst}}%</td>
-                            </tr>
-                            <tr>
-                                <td class="border" colspan="2"><strong>Discount</strong></td>
-                                <td class="border">{{invoice.discount}}%</td>
-                            </tr>
-                            <tr>
-                                <td class="border" colspan="2"><strong>Payment</strong></td>
-                                <td class="border">{{invoice.payment}} Rs</td>
-                            </tr>
-                            <tr>
-                                <td class="border text-start" colspan="6"><strong>Payment(in words):</strong> {{words_payment}}</td>
-
-                            </tr>
-                        </tfoot>
-                    </table>
-
-                </div>
-            </div>
-            <div class="row" style="font-size:12px;">
-                <div class="row">
-                    <div class="col text-start">
-                        <h5>Terms and Conditions:</h5>
-                        <ol>
-                            <li>Our responsibility ceases as soon as goods leave our premises</li>
-                            <li>subject to rajasthan jurisdiction</li>
-                            <li>Goods once sold will not be taken back</li>
-
-                        </ol>
-                    </div>
-                </div>
-
-                <div class="row mt-5">
-                    <div class="col-12 text-end">
-                        <p>Authorised Signature</p>
-                    </div>
-                </div>
-            </div>
-
+        <div class="container mt-3  text-center">
+            <button class="btn btn-primary mx-1 my-1" id="printButton">Print</button>
+            <a href="{% url 'view_invoices' %}" class="btn btn-primary mx-1 my-1" id="back_btn" role="button">Back</a>
         </div>
 
+        <div class="container mt-3 mx-15" > <!--style="background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 210mm; max-width: 100%; margin: auto;"-->
+            <h4 class="text-center"> TAX INVOICE</h4>
+            <div class="row header mb-1" style="font-size:15px;">
+                <div class="col-md-8 left_header">
+                    <h4><b>Chaudhary Girraj & Sons Infra Private Limited</b></h4>
+<!--
+                    <div>Registered Address: F-302, Akrati Phase 2, Kailash Vihar, City Centre, Gwalior, Madhya Pradesh, 474002</div>
+-->
+                    <div>CIN: U16291MP2020PTC050645</div>
+                    <div>Plant Address: Khasra No 752, Gram Mamoni, Post Mundiyar, Shahabad, Baran, Rajasthan, 325217</div>
+                    <div>Phone: +91 8770194155, 8770517035</div>
+                    <div>EMAIL: chuadharygirrajandsons@gmail.com</div>
+                    <div>GSTIN: 08AAICC5792Q1ZQ</div>
+                </div>
+                <div class="col-md-4 text-end right_header">
+                    <img class="border border-dark rounded-circle" src="{% static 'images/c_logo.jpeg' %}" style="width:100px; height:100px; border-radius: 10px;">
+                    <p>INVOICE: {{invoice.invoice_number}}</p>
+                    <p>E-WAY BILL: {{invoice.e_way_bill}}</p>
+                    <p>Date: {{invoice.invoice_date |date:"d-m-Y" |safe}}</p>
+                </div>
+            </div>
+            <!--<div class="row">
+                <div class="col text-center fs-5"><b>TAX INVOICE</b></div>
+            </div>-->
+
+            <div class="row " style="font-size:12px;">
+                <div class="col border border-dark">
+                    <h6><b><u>BILL TO:</u></b></h6>
+                    <div><b>Name: </b>{{customer.customer_name|safe}}</div>
+                    <div><b>GSTIN: </b>{{customer.customer_gstin|safe}}</div>
+                    <div><b>Address: </b>{{customer.customer_address}}, {{customer.customer_state}}, {{customer.zip_code}}</div>
+                    <div><b>Number: </b>{{customer.customer_number}}</div>
+                    <div><b>State Code: </b>{{customer.customer_state_code}}</div>
+
+                    <!--<dl class="row">
+                        <dt class="col-md-3">Name:</dt>
+                        <dd class="col-md-9">{{customer.customer_name|safe}}</dd>
+                        <dt class="col-md-3">GSTIN:</dt>
+                        <dd class="col-md-9">{{customer.customer_gstin|safe}}</dd>
+                        <dt class="col-md-3">Address:</dt>
+                        <dd class="col-md-9">{{customer.customer_address}}, {{customer.customer_state}}, {{customer.zip_code}}</dd>
+                        <dt class="col-md-3">Number:</dt>
+                        <dd class="col-md-9">{{customer.customer_number}}</dd>
+                    </dl>-->
+                </div>
+                <div class="col border border-dark" style="font-size:12px;">
+                    <h6><b><u>SHIP TO:</u></b></h6>
+                    <div><b>Name: </b>{{invoice.shipping_company_name|safe}}</div>
+                    <div><b>Address: </b>{{invoice.shipping_address}}, {{invoice.shipping_state}}, {{invoice.shipping_zip_code}}</div>
+                    <div><b>GSTIN: </b>{{invoice.shipping_gstin}}</div>
+                    <div><b>Contact Person: </b>{{invoice.shipping_contact_number}}</div>
+                    <div><b>State Code: </b>{{invoice.shipping_state_code}}</div>
+
+
+                    <!--<dl class="row">
+                        <dt class="col-md-3">Name:</dt>
+                        <dd class="col-md-9">{{customer.customer_name|safe}}</dd>
+                        <dt class="col-md-3">GSTIN:</dt>
+                        <dd class="col-md-9">{{customer.customer_gstin|safe}}</dd>
+                        <dt class="col-md-3">Address:</dt>
+                        <dd class="col-md-9">{{customer.customer_address}}, {{customer.customer_state}}, {{customer.zip_code}}</dd>
+                        <dt class="col-md-3">Number:</dt>
+                        <dd class="col-md-9">{{customer.customer_number}}</dd>
+                    </dl>-->
+                </div>
+            </div>
+
+            <!--<div class="row mx-1 my-2 p-2 border border-dark">
+                <div class="col-6">
+                    <u><strong>BILL TO:</strong></u>
+                    <dl class="row">
+                        <dt class="col-md-3">Name:</dt>
+                        <dd class="col-md-9">{{customer.customer_name|safe}}</dd>
+                        <dt class="col-md-3">GSTIN:</dt>
+                        <dd class="col-md-9">{{customer.customer_gstin|safe}}</dd>
+                        <dt class="col-md-3">Address:</dt>
+                        <dd class="col-md-9">{{customer.customer_address}}, {{customer.customer_state}}, {{customer.zip_code}}</dd>
+                        <dt class="col-md-3">Number:</dt>
+                        <dd class="col-md-9">{{customer.customer_number}}</dd>
+                    </dl>
+                </div>
+                <div class="col-6">
+                    <u><strong>SHIP TO:</strong></u>
+                    <dl class="row">
+                        <dt class="col-md-4">Address:</dt>
+                        <dd class="col-md-8">{{invoice.shipping_address}}, {{invoice.shipping_city}}, {{invoice.shipping_state}}, {{invoice.shipping_zip_code}}</dd>
+                        <dt class="col-md-4">Driver Name:</dt>
+                        <dd class="col-md-8">{{invoice.driver_name}}</dd>
+                        <dt class="col-md-4">Driver Number:</dt>
+                        <dd class="col-md-8">{{invoice.driver_number}}</dd>
+                        <dt class="col-md-4">Vehicle Number:</dt>
+                        <dd class="col-md-8">{{invoice.assigned_vehicle}}</dd>
+                    </dl>
+                </div>
+            </div>-->
+            <div class=" row border border-dark mb-1 mt-1 deactivate" style="font-size:12px;">
+                <h5 class="text-center">Driver Details:</h5>
+                <div class="row ">
+                    <div class="col">
+                        <b>Driver Name: </b>
+                        <p>{{invoice.driver_name}}</p>
+                    </div>
+                    <div class="col">
+                        <b>Driver Number: </b>
+                        <p>{{invoice.driver_number}}</p>
+                    </div>
+                    <div class="col">
+                        <b>Vehicle Number: </b>
+                        <p>{{invoice.assigned_vehicle}}</p>
+                    </div>
+
+                </div>
+
+
+                <!--<div><b>Driver Name: </b>{{invoice.driver_name}}</div>
+                <div><b>Driver Number: </b>{{invoice.driver_number}}</div>
+                <div><b>Vehicle Number: </b>{{invoice.assigned_vehicle}}</div>-->
+                <!--<dl class="row">
+                    <dt class="col-md-4 fs-6">Driver Name:</dt>
+                    <dd class="col-md-8 fs-6">{{invoice.driver_name}}</dd>
+                    <dt class="col-md-4 fs-6">Driver Number:</dt>
+                    <dd class="col-md-8 fs-6">{{invoice.driver_number}}</dd>
+                    <dt class="col-md-4 fs-6">Vehicle Number:</dt>
+                    <dd class="col-md-8 fs-6">{{invoice.assigned_vehicle}}</dd>
+                </dl>-->
+            </div>
+
+            <div class="row">
+                <div class="col">
+
+                </div>
+            </div>
+            <div class="row mt-2 border border-dark" >
+                <div class="col mt-2 table-responsive">
+                    <table class="table  ">
+                        <thead class="border border-dark text-nowrap">
+                            <tr>
+                                <th class="border border-dark">#</th>
+                                <th class="border border-dark">Product</th>
+                                <th class="border border-dark">HSN/SAC</th>
+                                <th class="border border-dark">Qty (TON)</th>
+                                <th class="border border-dark">Rate/TON</th>
+                                <th class="border border-dark">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="highlighted-row border border-dark " style="height:150px; ">
+                                <td class="span2 border border-dark">1</td>
+                                <td class="border border-dark">Biomass Briquettes Mustard Husk 90mm</td>
+                                <td class="border border-dark">44013200</td>
+                                <td class="border border-dark">{{invoice_weight|floatformat:2}}</td>
+                                <td class="border border-dark">{{invoice_item_rate|floatformat:2}} Rs</td>
+                                <td class="border border-dark">{{invoice.total}}</td>
+                            </tr>
+
+
+
+                        </tbody>
+                        <tfoot class="" style="font-size:10px; ">
+
+                            <tr class="" style="height:5px;">
+                                <td class="border border-dark" colspan="3" rowspan="3">
+                                    <h6>Payment Details</h6>
+                                    <p><b>ACCOUNT HOLDER: </b>CHAUDHARY GIRRAJ AND SONS INFRA PRIVATE LIMITED</p>
+                                    <p><b>ACCOUNT NUMBER: </b>0073008700006416</p>
+                                    <p><b>BANK NAME: </b>PUNJAB NATIONAL BANK BARAN</p>
+                                    <p><b>BANK IFSC: </b>PUNB0007300</p>
+                                   <!-- <h6><b>ACCOUNT NUMBER: </b>0073008700006416</h6>
+                                    <h6><b>ACCOUNT NUMBER: </b>0073008700006416</h6>-->
+                                    <!--<dl class="row">
+                                        <dt class="col-md-6">ACCOUNT NUMBER:</dt>
+                                        <dd class="col-md-6">0073008700006416</dd>
+                                        <dt class="col-md-6">BANK NAME:</dt>
+                                        <dd class="col-md-6">PUNJAB NATIONAL BANK</dd>
+                                        <dt class="col-md-6">BANK BRANCH:</dt>
+                                        <dd class="col-md-6">BARAN</dd>
+                                        <dt class="col-md-6">BANK IFSC:</dt>
+                                        <dd class="col-md-6">PUNB0007300</dd>
+                                    </dl>-->
+<!--
+                                    <h6 class="border"><strong>Payment (in words):</strong> {{words_payment}}</h6>
+-->
+                                </td>
+                                <td class="border border-dark text-center" colspan="2"><h6><b>Sub Total</b></h6></td>
+                                <td class="border border-dark text-center" ><h6>{{invoice.total}}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-dark"><h6><b>GST %</b></h6></td>
+                                <td class="border border-dark text-center"><h6><b>{{invoice.gst|floatformat:1}}</b></h6></td>
+                                <td class="border border-dark text-center "><h6 class="five_percent"></h6></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-dark"><h6><b>Round Off</b></h6></td>
+                                <td class="border border-dark text-center"><h6 id=""></h6></td>
+                                <td class="border border-dark text-center"><h6 id="RoundOffDisplay"></h6></td>
+                            </tr>
+                            <!--<tr>
+                                <td class="border border-dark"><h6><b>Discount</b></h6></td>
+                                <td class="border border-dark text-center"><h6>{{invoice.discount}}%</h6></td>
+                                <td class="border border-dark"><h6></h6></td>
+                            </tr>-->
+                            <tr class="border border-dark">
+                                <td colspan="3" rowspan="2" class="border border-dark"><strong>Payment (in words):</strong> {{words_payment}}</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-dark text-center" colspan="2"><h6><b>Payment</b></h6></td>
+                                <td class="border border-dark text-center" rowspan=""><h6 id="paymentDisplay">{{invoice.payment}}</h6></td>                            </tr>
+
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <!--<div class="row terms mt-3">
+                <div class="col">
+                    <h5>Terms and Conditions:</h5>
+                    <ol>
+                        <li>Our responsibility ceases as soon as goods leave our premises</li>
+                        <li>Subject to Rajasthan jurisdiction</li>
+                        <li>Goods once sold will not be taken back</li>
+                    </ol>
+                </div>
+            </div>-->
+
+            <br>
+            <br>
+            <br>
+
+            <div class="row mt-5">
+                <div class="col-12 text-end">
+                    <p>Authorised Signature</p>
+                </div>
+            </div>
+        </div>
     {% endif %}
-
     <script>
-        $(document).ready(function () {
-            $( "#printButton" ).click(function() {
-                $( "#printButton" ).hide();
-                $( "#back_btn" ).hide();
-                window.print();
-                $( "#printButton" ).show();
-                $( "#back_btn" ).show();
-            });
+    $(document).ready(function () {
+        // Function to round up the payment
+        function roundUp(value) {
+            return Math.ceil(value);
+        }
 
+        // Update the payment display
+        function updatePayment() {
+            var total = {{ invoice.payment }}; // Assuming this is the total amount
+            var roundedPayment = roundUp(total);
+            var roundOffValue = roundedPayment - total;
+            $('#RoundOffDisplay').text(roundOffValue.toFixed(2));
+            $('#paymentDisplay').text(roundOffValue.toFixed(2));
+            $('#paymentDisplay').text(roundedPayment.toFixed(2)); // Update the payment display element
+        }
+
+        // Call the updatePayment function on document ready
+        updatePayment();
+
+        var fivePercent = {{invoice.total}} * 0.05;
+        $('.five_percent').text(fivePercent.toFixed(2));
+
+        $("#printButton").click(function() {
+            $("#printButton").hide();
+            $("#back_btn").hide();
+            window.print();
+            $("#printButton").show();
+            $("#back_btn").show();
         });
-    </script>
+    });
+</script>
+
 
 </body>
 </html>

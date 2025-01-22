@@ -39,7 +39,7 @@
                     {% for data in invoice_data %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td class="fg_invoice">{{data.invoice_id|safe}}</td>
+                            <td class="fg_invoice">{{data.invoice_number|safe}}</td>
                             <td>{{data.customer|safe}}</td>
                             <!--<td>{{data.item_45mm_quantity|safe}}</td>
                             <td>{{data.item_45mm_rate|safe}}</td>
