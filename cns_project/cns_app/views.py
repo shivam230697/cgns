@@ -509,14 +509,19 @@ def payment(request):
             payment_model.payment_amount = payment_form.cleaned_data['payment_amount']
 
             customer_model = Customer.objects.get(pk=payment_form.cleaned_data['customer'].id)
-            if customer_model.payment_dues > payment_form.cleaned_data['payment_amount']:
-                customer_model.payment_dues = customer_model.payment_dues - payment_form.cleaned_data['payment_amount']
-                customer_model.payment_status = 'PENDING'
+            payment_difference = abs(customer_model.payment_dues - payment_form.cleaned_data['payment_amount'])
+
+            if payment_difference > 0:
+                customer_model.payment_dues = payment_difference
+                customer_model.payment_status = 'DR'
+                customer_model.save()
+            elif payment_difference < 0:
+                customer_model.payment_dues = payment_difference
+                customer_model.payment_status = 'CR'
                 customer_model.save()
             else:
                 customer_model.payment_dues = 0
-                customer_model.payment_status = 'PAID'
-                customer_model.save()
+                customer_model.payment_status = 'NIL'
                 return render(request, "payment.html", {'payment_form': payment_form})
             payment_model.save()
             messages.success(request, "Payment done Successfully")

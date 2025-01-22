@@ -4,6 +4,11 @@ class Environment:
         ('45 mm', '45 mm'),
         ('pencil', 'pencil'),
     )
+    PAYMENT_CHOICES = (
+        ('CR', 'CR'),
+        ('DR', 'DR'),
+        ('NIL', 'NIL'),
+    )
     STATE_CHOICES = [
         ('AP', 'Andhra Pradesh'),
         ('AR', 'Arunachal Pradesh'),

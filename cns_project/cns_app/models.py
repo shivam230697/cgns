@@ -88,17 +88,17 @@ class UserProfile(models.Model):
 
 class Customer(models.Model):
     from .environment import Environment
-    state_env = Environment
+    env = Environment
     customer_name = models.CharField(max_length=20)
     customer_number = models.CharField(max_length=50)
     customer_address = models.CharField(max_length=100)
-    customer_state = models.CharField(max_length=20, choices=state_env.STATE_CHOICES)
+    customer_state = models.CharField(max_length=20, choices=env.STATE_CHOICES)
     customer_city = models.CharField(max_length=20)
     customer_gstin = models.CharField(max_length=20)
     zip_code = models.PositiveIntegerField()
     customer_state_code = models.CharField(max_length=3)
     payment_dues = models.DecimalField(null=True, max_digits=12, editable=False, decimal_places=2)
-    payment_status = models.CharField(max_length=20, editable=False, choices=[('pending', 'PENDING'), ('paid', 'PAID')])
+    payment_status = models.CharField(max_length=20, editable=False, choices=env.PAYMENT_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
