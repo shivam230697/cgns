@@ -138,7 +138,7 @@
                     </li>
                     {% endif %}
                      <li class="nav-item">
-                         <a class="nav-link active btn btn-primary" href="#" aria-current="page">Welcome: {% if user.is_superuser %} {{ user.first_name }} {% else %} {{ user.username }} {% endif %}</a>
+                         <a class="nav-link active btn btn-primary" href="{% url 'admin:index' %}" aria-current="page">Welcome: {% if user.is_superuser %} {{ user.first_name }} {% else %} {{ user.username }} {% endif %}</a>
 
                      </li>
                     {% else  %}
