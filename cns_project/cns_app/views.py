@@ -439,14 +439,14 @@ def dashboard(request):
         invoices = InvoiceModel.objects.all()  # Fetch all invoices
         invoice_total_quantity = sum(
             invoice.item_quantity for invoice in invoices)  # Calculate total quantity from all invoices
-
+        invoice_total_quantity = invoice_total_quantity/100
         raw_materials = RawMaterialModel.objects.all()  # Fetch all raw materials
         raw_total_net_weight = sum(raw_material.net_wt for raw_material in raw_materials)  # Calculate total net weight
-
+        raw_total_net_weight = raw_total_net_weight/100
         productions = ProductionModel.objects.all()  # Fetch all production records
         production_total_net_weight = sum(
             production.product_net_weight for production in productions)  # Calculate total net weight
-
+        production_total_net_weight = production_total_net_weight/100
         context = {
             'invoices': invoices,
             'total_quantity': invoice_total_quantity,
