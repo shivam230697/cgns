@@ -313,11 +313,16 @@ def create_invoice_model(form):
     for field in form.cleaned_data:
         if hasattr(invoice_model, field):
             setattr(invoice_model, field, form.cleaned_data[field] or 0)
-
-    # Specific calculations
-    invoice_model.total_45mm = invoice_model.item_45mm_quantity / 1000 * invoice_model.item_45mm_rate
-    invoice_model.total_90mm = invoice_model.item_90mm_quantity / 1000 * invoice_model.item_90mm_rate
-    invoice_model.total_pencil = invoice_model.item_pencil_quantity / 1000 * invoice_model.item_pencil_rate
+    #     # Specific calculations with handling for None values
+    #     invoice_model.total_45mm = (invoice_model.item_45mm_quantity or 0) / 1000 * (invoice_model.item_45mm_rate or 0)
+    #     invoice_model.total_90mm = (invoice_model.item_90mm_quantity or 0) / 1000 * (invoice_model.item_90mm_rate or 0)
+    #     invoice_model.total_pencil = (invoice_model.item_pencil_quantity or 0) / 1000 * (
+    #                 invoice_model.item_pencil_rate or 0)
+    #
+    # # Specific calculations
+    # invoice_model.total_45mm = invoice_model.item_45mm_quantity / 1000 * invoice_model.item_45mm_rate
+    # invoice_model.total_90mm = invoice_model.item_90mm_quantity / 1000 * invoice_model.item_90mm_rate
+    # invoice_model.total_pencil = invoice_model.item_pencil_quantity / 1000 * invoice_model.item_pencil_rate
 
     return invoice_model
 
