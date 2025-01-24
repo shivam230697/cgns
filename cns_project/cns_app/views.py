@@ -383,6 +383,16 @@ def user_signup(request):
 @login_required
 def dashboard(request):
     logger.info(request)
+    invoices = InvoiceModel.objects.all()  # Fetch all invoices
+    invoice_total_quantity = sum(
+        invoice.item_quantity for invoice in invoices)  # Calculate total quantity from all invoices
+    invoice_total_quantity = invoice_total_quantity / 100
+    raw_materials = RawMaterialModel.objects.all()  # Fetch all raw materials
+    raw_total_net_weight = sum(raw_material.net_wt for raw_material in raw_materials)  # Calculate total net weight
+    productions = ProductionModel.objects.all()  # Fetch all production records
+    production_total_net_weight = sum(
+        production.product_net_weight for production in productions)  # Calculate total net weight
+    production_total_net_weight = production_total_net_weight / 100
     if request.method == "POST":
         button_name = request.POST.get('report_button', None)
         result = True if button_name == "show production report" else False
@@ -405,7 +415,9 @@ def dashboard(request):
                     'data': list(p_data),
                     'btn_name': button_name,
                     'from_date': start_date,
-                    'to_date': last_date
+                    'to_date': last_date,
+                    'total_sales': invoice_total_quantity, 'total_raw_material_weight': raw_total_net_weight,
+                    'total_production_weight': production_total_net_weight
                 }
             )
         if button_name == "show raw material report":
@@ -431,21 +443,14 @@ def dashboard(request):
                     'data': list(data),
                     'btn_name': button_name,
                     'from_date': start_date_str,
-                    'to_date': last_date_str
+                    'to_date': last_date_str,
+                    'total_sales': invoice_total_quantity, 'total_raw_material_weight': raw_total_net_weight,
+                    'total_production_weight': production_total_net_weight
                 }
             )
 
     else:
-        invoices = InvoiceModel.objects.all()  # Fetch all invoices
-        invoice_total_quantity = sum(
-            invoice.item_quantity for invoice in invoices)  # Calculate total quantity from all invoices
-        invoice_total_quantity = invoice_total_quantity/100
-        raw_materials = RawMaterialModel.objects.all()  # Fetch all raw materials
-        raw_total_net_weight = sum(raw_material.net_wt for raw_material in raw_materials)  # Calculate total net weight
-        productions = ProductionModel.objects.all()  # Fetch all production records
-        production_total_net_weight = sum(
-            production.product_net_weight for production in productions)  # Calculate total net weight
-        production_total_net_weight = production_total_net_weight/100
+
         context = {
             'invoices': invoices,
             'total_quantity': invoice_total_quantity,
