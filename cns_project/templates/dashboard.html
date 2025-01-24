@@ -85,7 +85,7 @@
                 <br>
 
             <div class="d-lg-flex flex-row " id="d1" >
-                <div class=" d-none table-responsive  " style="overflow:scroll; height:500px;">
+                <div class="  table-responsive  " style="overflow:scroll; height:500px;">
                 {% if btn_name == 'show production report'%}
                 <table id="pt" class=" table   table-striped table-bordered mt-2  text-center align-middle"
                        style="background-color: #4c3c3c; border: 2px solid black; border-radius: 10px;">
@@ -104,7 +104,7 @@
                         <tr>
                             <th scope="row" class="text-light">{{forloop.counter}}</th>
                             <td id="prst" class="text-light">{{obj.product_rst}}</td>
-                            <td id="pntwt" class="text-light">{{obj.product_net_weight|indian_currency_format}}</td>
+                            <td id="pntwt" class="text-light">{{obj.product_net_weight|floatformat:2}}</td>
                             <td class="text-light">{{obj.vehicle_no}}</td>
                             <td id="created" class="text-light">{{obj.created_at |date:"d-m-y H:i:s A"}}</td>
                             <td class="text-light">{{obj.updated_at |date:"d-m-y H:i:s A"}}</td>
@@ -194,17 +194,21 @@
             // Iterate through each row in the table
             $('#pt tbody tr').each(function () {
                 // Get the value of the cells in the respective columns
-                var valueColumn1 = parseInt($(this).find('#pntwt').text(), 10) || 0;
+                var valueColumn1 = parseFloat($(this).find('#pntwt').text(), 10) || 0;
+                console.log("Row value: ", valueColumn1);
                 values.push($(this).find('#created').text())
-                //var valueColumn2 = parseInt($(this).find('.column2').text(), 10) || 0;
+                //var valueColumn2 = parseFloat($(this).find('.column2').text(), 10) || 0;
 
                 // Accumulate the values
                 totalColumn1 += valueColumn1;
+                console.log(valueColumn1);
                 //totalColumn2 += valueColumn2;
             });
 
             // Display the total in the respective span elements
-            $('#pntwt_total').text('Total net weight: ' + totalColumn1);
+            <!--$('#pntwt_total').text('Total net weight: ' + totalColumn1);-->
+            $('#pntwt_total').text('Total net weight: ' + totalColumn1.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' q');
+
             let minDate =  values[0];
             let maxDate = values[values.length - 1];
 
