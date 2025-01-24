@@ -94,6 +94,10 @@
                         <input type="text" class="form-control" id="id_shipping_gstin" name="shipping_gstin" placeholder="Enter Shipping GSTIN" value="{{ form.shipping_gstin.value|default_if_none:'' }}" required>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="id_shipping_address" class="form-label">Shipping Address:</label>
+                    <input type="text" class="form-control" id="id_shipping_address" name="shipping_address" placeholder="Enter Shipping Address" value="{{ form.shipping_address.value|default_if_none:'' }}" required>
+                </div>
                 <div class="mb-3 row">
                     <div class="col-md-6">
                         <label for="id_shipping_state" class="form-label">Shipping State:</label>
