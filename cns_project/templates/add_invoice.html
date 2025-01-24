@@ -108,8 +108,8 @@
                             </select>
                     </div>
                     <div class="col-md-6">
-                        <label for="id_shipping_contact_person" class="form-label">Shipping Contact Person:</label>
-                        <input type="text" class="form-control" id="id_shipping_contact_person" name="shipping_contact_person" placeholder="Enter Shipping Contact Number" value="{{ form.shipping_contact_person.value|default_if_none:'' }}" required>
+                        <label for="id_shipping_contact_number" class="form-label">Shipping Contact Person:</label>
+                        <input type="text" class="form-control" id="id_shipping_contact_number" name="shipping_contact_number" placeholder="Enter Shipping Contact Number" value="{{ form.shipping_contact_number.value|default_if_none:'' }}" required>
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -206,7 +206,7 @@
                         $('#id_shipping_gstin').val(data.gstin); // Autofill GSTIN id_shipping_contact_person
                         $('#id_shipping_state_code').val(data.state_code); // Autofill State Code
                         $('#id_shipping_company_name').val(data.company_name); // Autofill Company Name
-                        $('#id_shipping_contact_person').val(data.contact_number);
+                        $('#id_shipping_contact_number').val(data.contact_number);
                     },
                     error: function () {
                         alert('Error fetching address details.');

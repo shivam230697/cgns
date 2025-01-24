@@ -312,6 +312,7 @@ def add_invoice(request):
             invoice_model.shipping_gstin = invoice_form.cleaned_data['shipping_gstin']
             invoice_model.shipping_state_code = invoice_form.cleaned_data['shipping_state_code']
             invoice_model.shipping_company_name = invoice_form.cleaned_data['shipping_company_name']
+            invoice_model.shipping_contact_number = invoice_form.cleaned_data['shipping_contact_number']
             if invoice_model.paid_amount > invoice_model.payment:
                 messages.error(request, 'Enter valid paid amount')
                 return render(request, "add_invoice.html", {'invoice_form': InvoiceForm()})
