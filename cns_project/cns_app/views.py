@@ -270,66 +270,70 @@ def delete_production(request, pk):
 @login_required
 def add_invoice(request):
     from .models import Customer
+    from django.db import transaction
+
     if request.method == "GET":
         invoice_form = InvoiceForm()
         return render(request, "add_invoice.html", {'invoice_form': invoice_form})
-    elif request.method == 'POST':
 
+    elif request.method == "POST":
         invoice_form = InvoiceForm(request.POST)
 
         if invoice_form.is_valid():
-            invoice_model = InvoiceModel()
-            invoice_model.customer = invoice_form.cleaned_data['customer']
-            invoice_model.item_45mm = invoice_form.cleaned_data['item45mm']
-            invoice_model.item_90mm = invoice_form.cleaned_data['item90mm']
-            invoice_model.item_pencil = invoice_form.cleaned_data['item_pencil']
-            invoice_model.item_45mm_quantity = invoice_form.cleaned_data['quantity_item1'] or 0
-            invoice_model.item_90mm_quantity = invoice_form.cleaned_data['quantity_item2'] or 0
-            invoice_model.item_pencil_quantity = invoice_form.cleaned_data['quantity_item3'] or 0
-            invoice_model.item_45mm_rate = invoice_form.cleaned_data['price_item1'] or 0
-            invoice_model.item_90mm_rate = invoice_form.cleaned_data['price_item2'] or 0
-            invoice_model.item_pencil_rate = invoice_form.cleaned_data['price_item3'] or 0
-            invoice_model.total_45mm = invoice_model.item_45mm_quantity/1000 * invoice_model.item_45mm_rate
-            invoice_model.total_90mm = invoice_model.item_90mm_quantity/1000 * invoice_model.item_90mm_rate
-            invoice_model.total_pencil = invoice_model.item_pencil_quantity/1000 * invoice_model.item_pencil_rate
-            invoice_model.shipping_address = invoice_form.cleaned_data['shipping_address']
-            invoice_model.shipping_state = invoice_form.cleaned_data['shipping_state']
-            invoice_model.shipping_city = invoice_form.cleaned_data['shipping_city']
-            invoice_model.shipping_zip_code = invoice_form.cleaned_data['shipping_zip_code']
-            invoice_model.total = invoice_form.cleaned_data['total']
-            invoice_model.gst = invoice_form.cleaned_data['gst']
-            invoice_model.discount = invoice_form.cleaned_data['discount'] or 0
-            invoice_model.payment = invoice_form.cleaned_data['payment']
-            invoice_model.driver_name = invoice_form.cleaned_data['driver_name']
-            invoice_model.driver_number = invoice_form.cleaned_data['driver_number']
-            invoice_model.assigned_vehicle = invoice_form.cleaned_data['assigned_vehicle']
-            invoice_model.paid_amount = invoice_form.cleaned_data['paid_amount']
-            invoice_model.invoice_number = invoice_form.cleaned_data['invoice_number']
-            invoice_model.e_way_bill = invoice_form.cleaned_data['e_way_bill']
-            invoice_model.item_type = invoice_form.cleaned_data['item_type']
-            invoice_model.item_rate = invoice_form.cleaned_data['item_rate']
-            invoice_model.item_quantity = invoice_form.cleaned_data['item_quantity']
-            invoice_model.shipping_gstin = invoice_form.cleaned_data['shipping_gstin']
-            invoice_model.shipping_state_code = invoice_form.cleaned_data['shipping_state_code']
-            invoice_model.shipping_company_name = invoice_form.cleaned_data['shipping_company_name']
-            invoice_model.shipping_contact_number = invoice_form.cleaned_data['shipping_contact_number']
-            if invoice_model.paid_amount > invoice_model.payment:
-                messages.error(request, 'Enter valid paid amount')
-                return render(request, "add_invoice.html", {'invoice_form': InvoiceForm()})
+            try:
+                with transaction.atomic():  # Ensures all or nothing for database operations
+                    invoice_model = create_invoice_model(invoice_form)
+                    invoice_model.save()
 
-            customer_model = Customer.objects.get(pk=invoice_form.cleaned_data['customer'].id)
+                    # Update customer payment dues
+                    customer = Customer.objects.get(pk=invoice_form.cleaned_data['customer'].id)
+                    update_customer_payment_dues(customer, invoice_form)
 
-            customer_model.payment_dues = (customer_model.payment_dues +
-                                           invoice_form.cleaned_data['payment'] - invoice_model.paid_amount)
-            customer_model.payment_status = 'PENDING'
-            customer_model.save()
-            invoice_model.save()
-            messages.success(request, "Invoice Added Successfully")
+                    messages.success(request, "Invoice Added Successfully")
+
+            except Customer.DoesNotExist:
+                messages.error(request, "The selected customer does not exist.")
+                return render(request, "add_invoice.html", {'invoice_form': invoice_form})
+            except Exception as e:
+                messages.error(request, f"An error occurred: {str(e)}")
+                return render(request, "add_invoice.html", {'invoice_form': invoice_form})
+
         else:
             messages.error(request, invoice_form.errors)
 
-        return render(request, "add_invoice.html", context={'invoice_form': InvoiceForm()})
+        return render(request, "add_invoice.html", {'invoice_form': invoice_form})
+
     return render(request, "add_invoice.html", {'invoice_form': InvoiceForm()})
+
+
+def create_invoice_model(form):
+    """Helper function to create the invoice model from the form."""
+    invoice_model = InvoiceModel()
+    # Assigning fields from the form to the model
+    for field in form.cleaned_data:
+        if hasattr(invoice_model, field):
+            setattr(invoice_model, field, form.cleaned_data[field] or 0)
+
+    # Specific calculations
+    invoice_model.total_45mm = invoice_model.item_45mm_quantity / 1000 * invoice_model.item_45mm_rate
+    invoice_model.total_90mm = invoice_model.item_90mm_quantity / 1000 * invoice_model.item_90mm_rate
+    invoice_model.total_pencil = invoice_model.item_pencil_quantity / 1000 * invoice_model.item_pencil_rate
+
+    return invoice_model
+
+
+def update_customer_payment_dues(customer, form):
+    """Updates the customer's payment dues and status."""
+    paid_amount = form.cleaned_data['paid_amount']
+    payment = form.cleaned_data['payment']
+
+    if paid_amount > payment:
+        raise ValueError('Paid amount cannot be greater than the payment amount.')
+
+    # Calculate new dues and update payment status
+    customer.payment_dues += payment - paid_amount
+    customer.payment_status = 'PENDING'
+    customer.save()
 
 
 @login_required

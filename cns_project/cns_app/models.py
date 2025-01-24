@@ -154,7 +154,7 @@ class InvoiceModel(models.Model):
     shipping_city = models.CharField(max_length=20)
     shipping_zip_code = models.PositiveIntegerField()
     driver_name = models.CharField(max_length=20, blank=True, default="UNKNOWN")
-    driver_number = models.PositiveIntegerField(default=1234567890)
+    driver_number = models.CharField(max_length=50, default="1234567890")
     assigned_vehicle = models.CharField(max_length=10, blank=True, default="UNKNOWN")
     paid_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     invoice_date = models.DateTimeField(auto_now_add=True)
