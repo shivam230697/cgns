@@ -478,30 +478,31 @@ def my_page(request):
 
 @login_required
 def add_customer(request):
-    form = CustomerForm()
+    if request.method == "POST":
+        customer_form = CustomerForm(request.POST or None)
 
-    if request.method == 'POST':
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            try:
-                customer = Customer(
-                    name=form.cleaned_data['name'],
-                    email=form.cleaned_data['email'],
-                    phone=form.cleaned_data['phone'],
-                    address=form.cleaned_data['address']
-                )
-                customer.save()
-                messages.success(request, "Customer added successfully!")
-                return redirect('customer_list')  # Redirect to a customer list view
-            except Exception as e:
-                logger.error(f"Error adding customer: {str(e)}")
-                messages.error(request, "An error occurred while adding the customer.")
+        if customer_form.is_valid():
+            customer_model = Customer()
+            customer_model.customer_name = customer_form.cleaned_data['customer_name']
+            customer_model.customer_number = customer_form.cleaned_data['customer_number']
+            customer_model.customer_address = customer_form.cleaned_data['customer_address']
+            customer_model.customer_state = customer_form.cleaned_data['customer_state']
+            customer_model.customer_city = customer_form.cleaned_data['customer_city']
+            customer_model.zip_code = customer_form.cleaned_data['zip_code']
+            customer_model.customer_state_code = customer_form.cleaned_data['customer_state_code']
+            customer_model.customer_gstin = customer_form.cleaned_data['customer_gstin'].upper()
+
+            customer_model.payment_dues = 0
+            customer_model.payment_status = 'PAID'
+            customer_model.save()
+            messages.success(request, 'Successfully Customer added')
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{field}: {error}")
+            messages.error(request, 'Customer Form is not submitted')
+        return render(request, 'add_customer.html', {'customer_form': CustomerForm()})
 
-    return render(request, "add_customer.html", context={'form': form})
+    if request.method == "GET":
+        return render(request, 'add_customer.html', {'customer_form': CustomerForm()})
+    return render(request, 'add_customer.html', {'customer_form': CustomerForm()})
 
 
 @login_required
