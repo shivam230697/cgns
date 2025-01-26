@@ -38,7 +38,7 @@ class RawExpenseModel(models.Model):
     env = Environment()
     raw_choice = env.Raw_Expense_Choices
     expense_id = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=20, choices=raw_choice)
+    type = models.CharField(max_length=50, choices=raw_choice)
     description = models.TextField()
     expense_amount = models.DecimalField(decimal_places=2, max_digits=12)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -89,16 +89,16 @@ class UserProfile(models.Model):
 class Customer(models.Model):
     from .environment import Environment
     env = Environment
-    customer_name = models.CharField(max_length=20)
+    customer_name = models.CharField(max_length=50)
     customer_number = models.CharField(max_length=50)
     customer_address = models.CharField(max_length=100)
-    customer_state = models.CharField(max_length=20, choices=env.STATE_CHOICES)
-    customer_city = models.CharField(max_length=20)
-    customer_gstin = models.CharField(max_length=20)
+    customer_state = models.CharField(max_length=50, choices=env.STATE_CHOICES)
+    customer_city = models.CharField(max_length=50)
+    customer_gstin = models.CharField(max_length=50)
     zip_code = models.PositiveIntegerField()
     customer_state_code = models.CharField(max_length=3)
     payment_dues = models.DecimalField(null=True, max_digits=12, editable=False, decimal_places=2)
-    payment_status = models.CharField(max_length=20, editable=False, choices=env.PAYMENT_CHOICES)
+    payment_status = models.CharField(max_length=50, editable=False, choices=env.PAYMENT_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -122,7 +122,7 @@ class Customer(models.Model):
 class InvoiceModel(models.Model):
     from .environment import Environment
     fg_env = Environment()
-    invoice_id = models.CharField(max_length=20, editable=False, unique=True)
+    invoice_id = models.CharField(max_length=50, editable=False, unique=True)
     invoice_number = models.IntegerField(blank=False, null=False, unique=True)
     e_way_bill = models.CharField(max_length=50 , unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
@@ -146,14 +146,14 @@ class InvoiceModel(models.Model):
     discount = models.IntegerField(default=0, blank=True, null=True)
     payment = models.DecimalField(null=True, max_digits=12, editable=False, decimal_places=2)
     shipping_address = models.CharField(max_length=50)
-    shipping_state = models.CharField(max_length=20, choices=fg_env.STATE_CHOICES)
+    shipping_state = models.CharField(max_length=50, choices=fg_env.STATE_CHOICES)
     shipping_state_code = models.CharField(max_length=3)
     shipping_gstin = models.CharField(max_length=50)
     shipping_contact_number = models.CharField(max_length=50)
     shipping_company_name = models.CharField(max_length=50)
-    shipping_city = models.CharField(max_length=20)
+    shipping_city = models.CharField(max_length=50)
     shipping_zip_code = models.PositiveIntegerField()
-    driver_name = models.CharField(max_length=20, blank=True, default="UNKNOWN")
+    driver_name = models.CharField(max_length=50, blank=True, default="UNKNOWN")
     driver_number = models.CharField(max_length=50, default="1234567890")
     assigned_vehicle = models.CharField(max_length=10, blank=True, default="UNKNOWN")
     paid_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
@@ -180,7 +180,7 @@ class InvoiceModel(models.Model):
 class PaymentModel(models.Model):
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    payment_method = models.CharField(max_length=20, choices=[('cash', 'cash'), ('online', 'online')])
+    payment_method = models.CharField(max_length=50, choices=[('cash', 'cash'), ('online', 'online')])
     payment_amount = models.DecimalField(max_digits=12, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -10,7 +10,7 @@
             <form action = "" method = "post" class="post-form">
                 {% csrf_token %}
                 <label for="id_product_rst">Product RST:</label>
-                <input type="number" class="form-control" id="id_product_rst" name="product_rst" value="{{ form.product_rst.value|default_if_none:'' }}" required>
+                <input autofocus type="number" class="form-control" id="id_product_rst" name="product_rst" value="{{ form.product_rst.value|default_if_none:'' }}" required>
 
                 <label for="id_vehicle_no">Vehicle Number:</label>
                 <input type="text" class="form-control" id="id_vehicle_no" name="vehicle_no" value="{{ form.product_rst.value|default_if_none:'' }}" >
